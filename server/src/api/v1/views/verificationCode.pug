@@ -1,0 +1,19 @@
+extends base
+
+block content
+  h1.align-left Hi #{firstName},
+  h3.noMargin please verify your #{accountType} account to be able to login
+  h3 Enter the code from below into the code field!
+  table(role='presentation' border='0' cellpadding='0' cellspacing='0')
+    tbody
+      tr
+        td
+          table(role='presentation' border='0' cellpadding='0' cellspacing='0')
+            tbody
+              tr
+                td
+                    ul.codeList
+                        -
+                        each item in list
+                            li= item
+                    p Good luck! UBook Team.
