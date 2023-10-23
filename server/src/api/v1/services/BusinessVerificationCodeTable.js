@@ -23,4 +23,13 @@ const QueryBusinessCode = async (userID) => {
   );
   return res;
 };
-module.exports = { InsertBusinessCode, QueryBusinessCode };
+
+const DeleteBusinessCode = async (userID) => {
+  const [res] = await pool.execute(
+    "DELETE FROM business_verification_codes WHERE owner_id = ?",
+    [userID]
+  );
+  return res;
+};
+
+module.exports = { InsertBusinessCode, QueryBusinessCode, DeleteBusinessCode };

@@ -47,4 +47,42 @@ const LoginUser = async (req, res) => {
   return res.status(401).send(Error("Invalid email or password!", "form"));
 };
 
+const VerifyUserAccount = async (req, res) => {
+  const providedCode = req.body.code;
+  const userID = req.userData.id;
+  const userCode = await QueryUserCode(userID);
+
+  // Check if account has code active
+  if (!userCode) {
+    return res
+      .status(400)
+      .json(Error("Account doesn't have a code active!", "code"));
+  }
+
+  // Check if provided code is valid
+  if (providedCode !== userCode.verification_code) {
+    return res.status(400).json(Error("Invalid code!", "code"));
+  }
+
+  // Check if code is expired
+  const codeIssuedAt = moment(userCode.timestamp);
+  const now = moment(moment.now());
+  const difference = now.diff(codeIssuedAt, "minutes");
+  if (difference > config.verificationCodeValidDuration) {
+    await SendVerificationCode(userID, "business");
+    return res
+      .status(410)
+      .json(
+        Error(
+          `Code expired after ${config.verificationCodeValidDuration} minutes! Email with new code was sent!`
+        )
+      );
+  }
+
+  // TODO update in db and respond with jwt token
+  await DeleteBusinessCode(userID);
+  await UpdateBusinessVerified(userID);
+  res.json(await CreateToken(userID, "business"));
+};
+
 module.exports = { CreateUser, LoginUser };

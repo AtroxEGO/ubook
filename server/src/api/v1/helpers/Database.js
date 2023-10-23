@@ -16,7 +16,7 @@ const pool = mysql2.createPool({
   host: "localhost",
   database: "ubook2",
   user: "root",
-  password: process.env.DB_PASSWORD,
+  // password: process.env.DB_PASSWORD,
   waitForConnections: true,
   connectionLimit: 10,
   maxIdle: 10,

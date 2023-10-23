@@ -13,6 +13,16 @@ const InsertBusiness = async (businessData) => {
   }
 };
 
+const QueryBusinessDataFromID = async (userID) => {
+  const [[res]] = await pool.execute(
+    `SELECT *
+     FROM BUSINESSES WHERE id = ?;
+    `,
+    [userID]
+  );
+  return res;
+};
+
 const QueryBusinessDataFromEmail = async (businessEmail) => {
   const [[res]] = await pool.execute(
     `SELECT *
@@ -40,9 +50,19 @@ const QueryBusinessVerificationEmailData = async (userID) => {
   return res;
 };
 
+const UpdateBusinessVerified = async (userID) => {
+  const [res] = await pool.execute(
+    "UPDATE businesses SET verified = 1 WHERE id = ?",
+    [userID]
+  );
+  return res;
+};
+
 module.exports = {
   InsertBusiness,
   QueryBusinessTokenData,
+  UpdateBusinessVerified,
   QueryBusinessVerificationEmailData,
   QueryBusinessDataFromEmail,
+  QueryBusinessDataFromID,
 };

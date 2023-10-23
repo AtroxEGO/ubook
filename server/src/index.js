@@ -7,8 +7,8 @@ const { VersionRouter } = require("./api/v1/versionRouter");
 const app = express();
 
 // TODO
-// - Remove code after verification
-// - Verify in database after correct code sent
+// - Learn how to write documentation
+// - Continue work on user verification (business done);
 
 // Setup Express App
 app.use(bodyParser.urlencoded({ extended: false }));

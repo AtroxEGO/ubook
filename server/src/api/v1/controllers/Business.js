@@ -1,4 +1,5 @@
 const Error = require("../helpers/Error");
+const Notification = require("../helpers/Notification");
 const errorMessages = require("../helpers/ErrorMessages");
 const moment = require("moment");
 const bcrypt = require("bcrypt");
@@ -9,9 +10,13 @@ const { SendVerificationCode } = require("../helpers/VerifyAccountEmail");
 const {
   InsertBusiness,
   QueryBusinessDataFromEmail,
+  UpdateVerified,
+  UpdateBusinessVerified,
+  QueryBusinessDataFromID,
 } = require("../services/BusinessTable");
 const {
   QueryBusinessCode,
+  DeleteBusinessCode,
 } = require("../services/BusinessVerificationCodeTable");
 
 const CreateBusiness = async (req, res) => {
@@ -52,9 +57,17 @@ const LoginBusiness = async (req, res) => {
 
 const VerifyBusinessAccount = async (req, res) => {
   const providedCode = req.body.code;
-  const businessCode = await QueryBusinessCode(req.userData.id);
+  const userID = req.userData.id;
+  const businessCode = await QueryBusinessCode(userID);
 
-  // Check provided code is valid
+  // Check if account has code active
+  if (!businessCode) {
+    return res
+      .status(400)
+      .json(Error("Account doesn't have a code active!", "code"));
+  }
+
+  // Check if provided code is valid
   if (providedCode !== businessCode.verification_code) {
     return res.status(400).json(Error("Invalid code!", "code"));
   }
@@ -64,7 +77,7 @@ const VerifyBusinessAccount = async (req, res) => {
   const now = moment(moment.now());
   const difference = now.diff(codeIssuedAt, "minutes");
   if (difference > config.verificationCodeValidDuration) {
-    await SendVerificationCode(req.userData.id, "business");
+    await SendVerificationCode(userID, "business");
     return res
       .status(410)
       .json(
@@ -75,8 +88,27 @@ const VerifyBusinessAccount = async (req, res) => {
   }
 
   // TODO update in db and respond with jwt token
-
-  res.json(providedCode);
+  await DeleteBusinessCode(userID);
+  await UpdateBusinessVerified(userID);
+  res.json(await CreateToken(userID, "business"));
 };
 
-module.exports = { CreateBusiness, LoginBusiness, VerifyBusinessAccount };
+const ResendBusinessEmailVerificationCode = async (req, res) => {
+  const userID = req.userData.id;
+  const result = await QueryBusinessDataFromID(userID);
+  const isVerified = result.verified === 1;
+
+  if (isVerified)
+    return res.status(400).json(Error("Account already verified!", "general"));
+
+  await SendVerificationCode(userID, "business");
+
+  res.json(Notification("Email with verification code was resent!", "general"));
+};
+
+module.exports = {
+  CreateBusiness,
+  LoginBusiness,
+  VerifyBusinessAccount,
+  ResendBusinessEmailVerificationCode,
+};

@@ -6,6 +6,7 @@ const {
   CreateBusiness,
   LoginBusiness,
   VerifyBusinessAccount,
+  ResendBusinessEmailVerificationCode,
 } = require("../controllers/Business");
 const {
   businessCreateSchema,
@@ -27,5 +28,8 @@ router.post(
   [TokenVerifier, validation(VerificationCodeSchema)],
   VerifyBusinessAccount
 );
+
+// Resends email verification code (returns Notification)
+router.get("/resendCode", TokenVerifier, ResendBusinessEmailVerificationCode);
 
 module.exports = { BusinessRouter: router };
