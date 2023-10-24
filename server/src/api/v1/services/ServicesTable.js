@@ -8,6 +8,14 @@ const QueryAllServices = async () => {
   return res;
 };
 
+const QueryServicesByIDs = async (serviceIDs) => {
+  const [res] = await pool.query("SELECT * FROM services WHERE id IN (?)", [
+    serviceIDs,
+  ]);
+  console.log(res);
+  return res;
+};
+
 const QueryServiceById = async (serviceID) => {
   const [[res]] = await pool.execute("SELECT * FROM SERVICES WHERE id = ?", [
     serviceID,
@@ -86,6 +94,7 @@ module.exports = {
   QueryAllServices,
   InsertService,
   QueryServiceById,
+  QueryServicesByIDs,
   UpdateService,
   DeleteService,
 };

@@ -4,6 +4,9 @@ const errorMessages = {
   notAuthorized: "Unauthorized for this request!",
   doesntExist: "Object accessed in your request doesnt exist!",
   invalidAccountType: "Invalid account type for this request!",
+  missingData: "Your request is missing data!",
+  ER_DUP_ENTRY: "Entry already exists!",
+  ER_NO_REFERENCED_ROW_2: "Object accesed in your request doesnt exist!",
 };
 
 module.exports = errorMessages;

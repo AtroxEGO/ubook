@@ -6,8 +6,10 @@ const TokenVerifier = require("./api/v1/middlewares/TokenVerifier");
 const { VersionRouter } = require("./api/v1/versionRouter");
 const app = express();
 
-// TODO
-// - Learn how to write documentation
+// # TODO
+// - Learn how to write documentation (/)
+// - Use sockets to show when someone tries to book your service (?)
+// - Implement booking appointment (!)
 
 // Setup Express App
 app.use(bodyParser.urlencoded({ extended: false }));

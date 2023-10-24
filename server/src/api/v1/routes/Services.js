@@ -1,10 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const validation = require("../middlewares/ValidationMiddleware");
-const { GetAllServices, GetServiceById } = require("../controllers/Services");
+const {
+  GetAllServices,
+  GetServiceById,
+  GetServicesByIDs,
+} = require("../controllers/Services");
 
 router.get("/getAll", GetAllServices);
 
 router.post("/getById", GetServiceById);
+
+router.post("/getByIds", GetServicesByIDs);
 
 module.exports = { ServicesRouter: router };
