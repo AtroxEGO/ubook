@@ -32,6 +32,38 @@ const serviceCreationSchema = yup.object().shape({
     .positive()
     .required("Please specify duration of the service!"),
   gap: yup.number().positive().required("Please specify gap between services!"),
+  serviceHourStart: yup.number().positive().max(24),
+  serviceHourEnd: yup.number().positive().max(24),
 });
 
-module.exports = { serviceCreationSchema };
+const serviceUpdateSchema = yup.object().shape({
+  id: yup.number().positive().required(),
+  name: yup
+    .string()
+    .min(10, wrongNameLength)
+    .max(100, wrongNameLength)
+    .required(nameEmpty),
+  description: yup
+    .string()
+    .min(10, wrongDescLength)
+    .max(500, wrongDescLength)
+    .required(descEmpty),
+  subcategory: yup
+    .number()
+    .positive("Subcategory id musts be positive!")
+    .required("Please select subcategory!"),
+  image_url: yup.string().max(300),
+  price: yup
+    .number()
+    .positive()
+    .required("Please specify price for the service!"),
+  duration: yup
+    .number()
+    .positive()
+    .required("Please specify duration of the service!"),
+  gap: yup.number().positive().required("Please specify gap between services!"),
+  serviceHourStart: yup.number().positive().max(24).required(),
+  serviceHourEnd: yup.number().positive().max(24).required(),
+});
+
+module.exports = { serviceCreationSchema, serviceUpdateSchema };

@@ -1,4 +1,4 @@
-const Notification = (message, path) => ({
+const Notification = (message, path = "general") => ({
   message,
   path,
 });

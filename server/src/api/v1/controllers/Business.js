@@ -87,7 +87,6 @@ const VerifyBusinessAccount = async (req, res) => {
       );
   }
 
-  // TODO update in db and respond with jwt token
   await DeleteBusinessCode(userID);
   await UpdateBusinessVerified(userID);
   res.json(await CreateToken(userID, "business"));

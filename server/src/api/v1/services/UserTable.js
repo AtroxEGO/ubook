@@ -22,6 +22,16 @@ const InsertUser = async (userData) => {
   }
 };
 
+const QueryUserDataFromID = async (userID) => {
+  const [[res]] = await pool.execute(
+    `SELECT *
+     FROM USERS WHERE id = ?;
+    `,
+    [userID]
+  );
+  return res;
+};
+
 const QueryUserDataFromEmail = async (userEmail) => {
   const [[res]] = await pool.execute(
     `SELECT *
@@ -52,10 +62,20 @@ const QueryUserVerificationEmailData = async (userID) => {
   return res;
 };
 
+const UpdateUserVerified = async (userID) => {
+  const [res] = await pool.execute(
+    "UPDATE users SET verified = 1 WHERE id = ?",
+    [userID]
+  );
+  return res;
+};
+
 module.exports = {
   InsertUser,
   CheckIfRecordExists,
   QueryUserTokenData,
   QueryUserVerificationEmailData,
   QueryUserDataFromEmail,
+  QueryUserDataFromID,
+  UpdateUserVerified,
 };

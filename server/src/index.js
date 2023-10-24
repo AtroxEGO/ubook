@@ -8,7 +8,6 @@ const app = express();
 
 // TODO
 // - Learn how to write documentation
-// - Continue work on user verification (business done);
 
 // Setup Express App
 app.use(bodyParser.urlencoded({ extended: false }));

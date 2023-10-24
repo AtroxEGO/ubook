@@ -1,4 +1,4 @@
-const Error = (message, path) => ({
+const Error = (message, path = "general") => ({
   message,
   path,
 });

@@ -16,4 +16,20 @@ const InsertUserCode = async (ownerID, code, accountType) => {
   }
 };
 
-module.exports = { InsertUserCode };
+const QueryUserCode = async (userID) => {
+  const [[res]] = await pool.execute(
+    "SELECT * FROM user_verification_codes WHERE owner_id = ?",
+    [userID]
+  );
+  return res;
+};
+
+const DeleteUserCode = async (userID) => {
+  const [res] = await pool.execute(
+    "DELETE FROM user_verification_codes WHERE owner_id = ?",
+    [userID]
+  );
+  return res;
+};
+
+module.exports = { InsertUserCode, DeleteUserCode, QueryUserCode };

@@ -1,15 +1,22 @@
 const Error = require("../helpers/Error");
 const errorMessages = require("../helpers/ErrorMessages");
-
+const moment = require("moment");
 const bcrypt = require("bcrypt");
 const {
   InsertUser,
   CheckIfRecordExists,
   QueryUserDataFromEmail,
+  QueryUserDataFromID,
+  UpdateUserVerified,
 } = require("../services/UserTable");
 const config = require("../../../config/config");
 const { CreateToken } = require("../helpers/Token");
 const { SendVerificationCode } = require("../helpers/VerifyAccountEmail");
+const {
+  QueryUserCode,
+  DeleteUserCode,
+} = require("../services/UserVerificationCodeTable");
+const Notification = require("../helpers/Notification");
 
 // Creates a new user
 const CreateUser = async (req, res) => {
@@ -69,7 +76,7 @@ const VerifyUserAccount = async (req, res) => {
   const now = moment(moment.now());
   const difference = now.diff(codeIssuedAt, "minutes");
   if (difference > config.verificationCodeValidDuration) {
-    await SendVerificationCode(userID, "business");
+    await SendVerificationCode(userID, "user");
     return res
       .status(410)
       .json(
@@ -79,10 +86,27 @@ const VerifyUserAccount = async (req, res) => {
       );
   }
 
-  // TODO update in db and respond with jwt token
-  await DeleteBusinessCode(userID);
-  await UpdateBusinessVerified(userID);
-  res.json(await CreateToken(userID, "business"));
+  await DeleteUserCode(userID);
+  await UpdateUserVerified(userID);
+  res.json(await CreateToken(userID, "user"));
 };
 
-module.exports = { CreateUser, LoginUser };
+const ResendUserEmailVerificationCode = async (req, res) => {
+  const userID = req.userData.id;
+  const result = await QueryUserDataFromID(userID);
+  const isVerified = result.verified === 1;
+
+  if (isVerified)
+    return res.status(400).json(Error("Account already verified!", "general"));
+
+  await SendVerificationCode(userID, "user");
+
+  res.json(Notification("Email with verification code was resent!", "general"));
+};
+
+module.exports = {
+  CreateUser,
+  LoginUser,
+  VerifyUserAccount,
+  ResendUserEmailVerificationCode,
+};

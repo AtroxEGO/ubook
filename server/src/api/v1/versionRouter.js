@@ -16,7 +16,7 @@ router.use("/services", [TokenVerifier], ServicesRouter);
 
 // Requests regarding managing services by business
 const { ManageRouter } = require("./routes/Manage");
-const permissionsMiddleware = require("./middlewares/PermissionsMiddleware");
+const permissionsMiddleware = require("./middlewares/CorrectAccountTypeMiddleware");
 router.use(
   "/manage",
   [TokenVerifier, permissionsMiddleware("business")],
