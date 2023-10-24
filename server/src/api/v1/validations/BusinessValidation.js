@@ -15,7 +15,7 @@ const businessCreateSchema = yup.object().shape({
   password: yup
     .string()
     .required("Please Enter your password")
-    .matches(/^.{8,16}$$/, "Password musts have between 8 to 16 characters")
+    .matches(/^.{8,16}$/, "Password musts have between 8 to 16 characters")
     .matches(/[a-z]/, "Password musts contain one lower case character!")
     .matches(/[A-Z]/, "Password musts contain one upper case character!")
     .matches(/\d/, "Password musts contain one numer!")

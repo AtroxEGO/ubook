@@ -9,16 +9,21 @@ router.post("/create", [validation(userSchema)], CreateUser);
 
 // Login into user account (returns JWT Token)
 const { loginUserSchema } = require("../validations/UserValidation");
+const TokenVerifier = require("../middlewares/TokenVerifier");
+const {
+  VerificationCodeSchema,
+} = require("../validations/VerificationCodeValidation");
 router.post("/login", [validation(loginUserSchema)], LoginUser);
 
 // Verify Business Account (returns JWT Token)
-router.post(
-  "/verify",
-  [TokenVerifier, validation(VerificationCodeSchema)],
-  VerifyUserAccount
-);
+// router.post(
+//   "/verify",
+//   [TokenVerifier, validation(VerificationCodeSchema)],
+//   VerifyUserAccount
+// );
 
 // Resends email verification code (returns Notification)
-router.get("/resendCode", TokenVerifier, ResendUserEmailVerificationCode);
+// router.get("/resendCode", TokenVerifier, ResendUserEmailVerificationCode);
+router.get("/resendCode", TokenVerifier, (req, res) => {});
 
 module.exports = { UserRouter: router };
