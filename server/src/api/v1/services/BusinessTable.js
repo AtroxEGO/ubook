@@ -42,7 +42,7 @@ const QueryBusinessTokenData = async (userID) => {
 
 const QueryBusinessVerificationEmailData = async (userID) => {
   const [[res]] = await pool.execute(
-    `SELECT email, first_name
+    `SELECT email, name
      FROM businesses WHERE id = ?;
     `,
     [userID]

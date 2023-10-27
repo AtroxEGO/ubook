@@ -35,4 +35,8 @@ router.use(
 const { ReviewsRouter } = require("./routes/Reviews");
 router.use("/reviews", [TokenVerifier], ReviewsRouter);
 
+// Requests regarding bookings
+const { BookingsRouter } = require("./routes/Bookings");
+router.use("/bookings", [TokenVerifier], BookingsRouter);
+
 module.exports = { VersionRouter: router };

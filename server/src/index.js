@@ -10,6 +10,9 @@ const app = express();
 // - Learn how to write documentation (/)
 // - Use sockets to show when someone tries to book your service (?)
 // - Implement booking appointment (!)
+// - Upload Image from Create service to firebase
+// - Change login / password data (create new endpoint)
+// - Change profile pictures for user and business
 
 // Setup Express App
 app.use(bodyParser.urlencoded({ extended: false }));

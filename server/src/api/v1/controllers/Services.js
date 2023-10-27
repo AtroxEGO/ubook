@@ -1,9 +1,12 @@
 const Error = require("../helpers/Error");
+const errorMessages = require("../helpers/ErrorMessages");
+const moment = require("moment");
 const {
   QueryAllServices,
   QueryServiceById,
   QueryServicesByIDs,
 } = require("../services/ServicesTable");
+const { getAvaiableHoursAsTimestamps } = require("../helpers/Booking");
 
 const GetAllServices = async (req, res) => {
   const result = await QueryAllServices();
@@ -26,4 +29,24 @@ const GetServicesByIDs = async (req, res) => {
   res.json(result);
 };
 
-module.exports = { GetAllServices, GetServiceById, GetServicesByIDs };
+const GetAvailableHours = async (req, res) => {
+  const serviceID = req.body.serviceID;
+  const date = moment(req.body.date);
+
+  if (!date.isValid())
+    return res.status(400).json(Error(errorMessages.invalidData));
+
+  if (!serviceID || !date)
+    return res.status(400).json(Error(errorMessages.missingData));
+
+  const service = await QueryServiceById(serviceID);
+
+  res.json(await getAvaiableHoursAsTimestamps(service, date));
+};
+
+module.exports = {
+  GetAllServices,
+  GetServiceById,
+  GetServicesByIDs,
+  GetAvailableHours,
+};

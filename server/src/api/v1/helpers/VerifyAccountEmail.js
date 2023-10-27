@@ -6,6 +6,9 @@ const {
 } = require("../services/BusinessVerificationCodeTable");
 const { SendEmail } = require("./Email");
 const { QueryUserVerificationEmailData } = require("../services/UserTable");
+const {
+  QueryBusinessVerificationEmailData,
+} = require("../services/BusinessTable");
 
 const SendVerificationCode = async (userID, accountType) => {
   const code = GenerateCode();
@@ -14,7 +17,10 @@ const SendVerificationCode = async (userID, accountType) => {
       ? await InsertUserCode(userID, code)
       : await InsertBusinessCode(userID, code);
 
-  const emailData = await QueryUserVerificationEmailData(userID);
+  const emailData =
+    accountType === "user"
+      ? await QueryUserVerificationEmailData(userID)
+      : await QueryBusinessVerificationEmailData(userID);
 
   await SendVerificationEmail(emailData, code, accountType);
 };
@@ -32,6 +38,7 @@ const GenerateCode = () => {
 };
 
 const SendVerificationEmail = (emailData, code, accountType) => {
+  console.log(emailData);
   const codeArray = code.split("").map(Number);
 
   const emailOptions = {

@@ -48,7 +48,11 @@ const LoginUser = async (req, res) => {
     userData?.password
   );
   if (passwordMatches) {
-    return res.json(await CreateToken(userData.id, "user"));
+    return res.json({
+      message: "Successfully logged in!",
+      token: await CreateToken(userData.id, "user"),
+      type: "success",
+    });
   }
 
   return res.status(401).send(Error("Invalid email or password!", "form"));
