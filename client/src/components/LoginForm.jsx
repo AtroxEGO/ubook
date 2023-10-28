@@ -16,7 +16,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import defaultTheme from "../utils/themes";
 import { useDispatch } from "react-redux";
 import { setSnack } from "../services/store/features/snackSlice";
-import { useLoginUserMutation } from "../services/api/apiSlice";
+import {
+  useLoginBusinessMutation,
+  useLoginUserMutation,
+} from "../services/api/apiSlice";
 import { LoadingButton } from "@mui/lab";
 import { login } from "../services/store/features/account/accountSlice";
 import { jwtDecode } from "jwt-decode";
@@ -32,7 +35,11 @@ const handleLogin = (data, dispatch) => {
 const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loginUser, { isLoading }] = useLoginUserMutation();
+  const [loginUser, { userLoading }] = useLoginUserMutation();
+  const [loginBusiness, { businessLoading }] = useLoginBusinessMutation();
+  const isLoading = userLoading || businessLoading;
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
   const formik = useFormik({
     initialValues: {
       email: "pawel.polakiewicz1@gmail.com",
@@ -41,25 +48,40 @@ const LoginForm = () => {
     },
     validationSchema: loginFormSchema,
     onSubmit: (values) => {
-      loginUser({
-        email: values.email,
-        password: values.password,
-      })
-        .unwrap()
-        .then((data) => {
-          dispatch(setSnack(data));
-          handleLogin(data, dispatch);
-          navigate("/");
+      if (accountType === "user") {
+        loginUser({
+          email: values.email,
+          password: values.password,
         })
-        .catch((error) => {
-          dispatch(setSnack(error));
-        });
+          .unwrap()
+          .then((data) => {
+            console.log(data);
+            dispatch(setSnack(data));
+            handleLogin(data, dispatch);
+            navigate("/");
+          })
+          .catch((error) => {
+            dispatch(setSnack(error));
+          });
+      } else {
+        loginBusiness({
+          email: values.email,
+          password: values.password,
+        })
+          .unwrap()
+          .then((data) => {
+            console.log(data);
+            dispatch(setSnack(data));
+            handleLogin(data, dispatch);
+            navigate("/");
+          })
+          .catch((error) => {
+            dispatch(setSnack(error));
+          });
+      }
     },
   });
-
   const [accountType, setAccountType] = useState(formik.values.accountType);
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-  const { state } = useLocation();
 
   return (
     <ThemeProvider theme={defaultTheme(accountType, prefersDarkMode)}>

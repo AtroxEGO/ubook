@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { json } from "react-router-dom";
 
 export const getTokenFromLocalStorage = () => {
   const { accountReducer } = JSON.parse(sessionStorage.getItem("reduxState"));
@@ -15,9 +14,16 @@ export const api = createApi({
       return headers;
     },
   }),
+  transformErrorResponse: (response, meta, arg) => {
+    return { ...response.data, type: "error" };
+  },
+  keepUnusedDataFor: 1,
   endpoints: (builder) => ({
     getAllServices: builder.query({
       query: () => "services/getAll",
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
     }),
     loginUser: builder.mutation({
       query: (body) => ({
@@ -25,7 +31,46 @@ export const api = createApi({
         method: "POST",
         body,
       }),
-
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    loginBusiness: builder.mutation({
+      query: (body) => ({
+        url: "/business/login",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    getAllFavorites: builder.mutation({
+      query: (body) => ({
+        url: "/favorites/getAll",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    addFavorite: builder.mutation({
+      query: (body) => ({
+        url: "/favorites/add",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    removeFavorite: builder.mutation({
+      query: (body) => ({
+        url: "/favorites/remove",
+        method: "POST",
+        body,
+      }),
       transformErrorResponse: (response, meta, arg) => {
         return { ...response.data, type: "error" };
       },
@@ -33,4 +78,11 @@ export const api = createApi({
   }),
 });
 
-export const { useGetAllServicesQuery, useLoginUserMutation } = api;
+export const {
+  useGetAllServicesQuery,
+  useLoginUserMutation,
+  useLoginBusinessMutation,
+  useAddFavoriteMutation,
+  useRemoveFavoriteMutation,
+  useGetAllFavoritesMutation,
+} = api;

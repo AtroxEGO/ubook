@@ -18,7 +18,7 @@ function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const dispatch = useDispatch();
   const accountType = useSelector(
-    (state) => state.accountReducer?.accountData?.accountType
+    (state) => state.accountReducer?.accountData?.account
   );
   const snack = useSelector((state) => state.snackReducer);
 

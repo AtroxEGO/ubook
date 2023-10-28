@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import accountReducer from "./features/account/accountSlice";
 import snackReducer from "./features/snackSlice";
+import favoriteReducer from "./features/favoritesSlice";
 import { api } from "../api/apiSlice";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
@@ -17,6 +18,7 @@ export const store = configureStore({
   reducer: {
     accountReducer,
     snackReducer,
+    favoriteReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

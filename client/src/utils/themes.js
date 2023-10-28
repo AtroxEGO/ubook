@@ -24,9 +24,6 @@ export const businessThemeOptions = (prefersDarkMode) => {
       secondary: {
         main: "#1976d0",
       },
-      background: {
-        default: "#000000",
-      },
     },
   };
 };
