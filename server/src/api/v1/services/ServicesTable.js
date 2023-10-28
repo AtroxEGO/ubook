@@ -4,9 +4,27 @@ const Notification = require("../helpers/Notification");
 const Error = require("../helpers/Error");
 
 const QueryAllServices = async () => {
-  const [res] = await pool.execute("SELECT * FROM SERVICES");
-  return res;
+  const [services] =
+    await pool.execute(`SELECT services.id as serviceID, services.name, description, image_url, price, duration, gap, serviceHourStart, serviceHourEnd,subcategory_name, category_name, businesses.name as creator_name, address, avatar_url, ROUND(COALESCE(AVG(reviews.review), 0), 1) as averageReview, COUNT(reviews.review) as reviewCount
+    FROM services
+    LEFT JOIN subcategories ON subcategories.id = services.subcategory
+    LEFT JOIN categories ON categories.id = subcategories.category_id
+    LEFT JOIN businesses ON businesses.id = services.created_by
+    LEFT JOIN reviews ON reviews.service_id = services.id
+    GROUP BY services.id, services.name, description, image_url, price, duration, gap, serviceHourStart, serviceHourEnd,subcategory_name, category_name, businesses.name, address, avatar_url;`);
+
+  return services;
 };
+
+// const QueryAllServices = async () => {
+//   // const [res] = await pool.execute("SELECT * FROM SERVICES");
+//   const [res] =
+//     await pool.execute(`SELECT services.name, description, image_url, price, duration, gap, serviceHourStart, serviceHourEnd,subcategory_name, category_name, businesses.name as creator_name, address, avatar_url  FROM services
+//       LEFT JOIN subcategories on subcategories.id = services.subcategory
+//       LEFT JOIN categories on categories.id = subcategories.category_id
+//       LEFT JOIN businesses on businesses.id = services.created_by;`);
+//   return res;
+// };
 
 const QueryServicesByIDs = async (serviceIDs) => {
   const [res] = await pool.query("SELECT * FROM services WHERE id IN (?)", [

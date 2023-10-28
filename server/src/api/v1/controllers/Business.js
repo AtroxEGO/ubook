@@ -35,7 +35,11 @@ const CreateBusiness = async (req, res) => {
   SendVerificationCode(businessID, "business");
 
   // Return newly created JWT Token
-  return res.json(await CreateToken(businessID, "business"));
+  return res.json({
+    message: "Successfully created the account!",
+    token: await CreateToken(businessID, "business"),
+    type: "success",
+  });
 };
 
 const LoginBusiness = async (req, res) => {
@@ -49,7 +53,11 @@ const LoginBusiness = async (req, res) => {
     businessData?.password
   );
   if (passwordMatches) {
-    return res.json(await CreateToken(businessData.id, "business"));
+    return res.json({
+      message: "Successfully logged in!",
+      token: await CreateToken(businessData.id, "business"),
+      type: "success",
+    });
   }
 
   return res.status(401).send(Error("Invalid email or password!", "form"));
@@ -89,7 +97,11 @@ const VerifyBusinessAccount = async (req, res) => {
 
   await DeleteBusinessCode(userID);
   await UpdateBusinessVerified(userID);
-  res.json(await CreateToken(userID, "business"));
+  res.json({
+    token: await CreateToken(userID, "business"),
+    message: "Successfully verified!",
+    type: "success",
+  });
 };
 
 const ResendBusinessEmailVerificationCode = async (req, res) => {
@@ -102,7 +114,7 @@ const ResendBusinessEmailVerificationCode = async (req, res) => {
 
   await SendVerificationCode(userID, "business");
 
-  res.json(Notification("Email with verification code was resent!", "general"));
+  res.json(Notification(`Email was resent to: ${result.email}!`, "general"));
 };
 
 module.exports = {

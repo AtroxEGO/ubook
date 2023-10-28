@@ -12,7 +12,10 @@ const AddToFavorites = async (req, res) => {
 
   try {
     await InsertFavorite({ userID, serviceID });
-    res.json(Notification("Successfully added service to favorites!"));
+    res.json({
+      ...Notification("Successfully added service to favorites!"),
+      favorites: await QueryAllFavorites(userID),
+    });
   } catch (error) {
     res.status(400).json(error);
   }
@@ -25,7 +28,10 @@ const RemoveFromFavorites = async (req, res) => {
 
   try {
     await DeleteFavorite({ userID, serviceID });
-    res.json(Notification("Successfully removed service from favorites!"));
+    res.json({
+      ...Notification("Successfully removed service from favorites!"),
+      favorites: await QueryAllFavorites(userID),
+    });
   } catch (error) {
     console.log(error);
     res.status(400).json(error);
@@ -35,10 +41,9 @@ const RemoveFromFavorites = async (req, res) => {
 // Responds with all favorites that user has
 const GetAllFavorites = async (req, res) => {
   const userID = req.userData.id;
-  console.log(req.userData);
   try {
     const result = await QueryAllFavorites(userID);
-    res.json(result);
+    res.json({ favorites: result });
   } catch (error) {
     console.log(error);
     res.status(400).json(error);

@@ -30,6 +30,6 @@ router.post(
 );
 
 // Resends email verification code (returns Notification)
-router.get("/resendCode", TokenVerifier, ResendBusinessEmailVerificationCode);
+router.get("/resendCode", [TokenVerifier], ResendBusinessEmailVerificationCode);
 
 module.exports = { BusinessRouter: router };

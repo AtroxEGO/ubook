@@ -34,7 +34,11 @@ const CreateUser = async (req, res) => {
   SendVerificationCode(userID, "user");
 
   // Return newly created JWT Token
-  return res.json(await CreateToken(userID, "user"));
+  return res.json({
+    message: "Successfully created the account!",
+    token: await CreateToken(userID, "user"),
+    type: "success",
+  });
 };
 
 const LoginUser = async (req, res) => {
@@ -92,7 +96,11 @@ const VerifyUserAccount = async (req, res) => {
 
   await DeleteUserCode(userID);
   await UpdateUserVerified(userID);
-  res.json(await CreateToken(userID, "user"));
+  res.json({
+    token: await CreateToken(userID, "user"),
+    message: "Successfully verified!",
+    type: "success",
+  });
 };
 
 const ResendUserEmailVerificationCode = async (req, res) => {
@@ -105,7 +113,7 @@ const ResendUserEmailVerificationCode = async (req, res) => {
 
   await SendVerificationCode(userID, "user");
 
-  res.json(Notification("Email with verification code was resent!", "general"));
+  res.json(Notification(`Email was resent to: ${result.email}!`, "general"));
 };
 
 module.exports = {

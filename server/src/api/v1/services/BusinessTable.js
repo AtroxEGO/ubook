@@ -2,6 +2,7 @@ const { pool } = require("../helpers/Database");
 const errorMessages = require("../helpers/ErrorMessages");
 
 const InsertBusiness = async (businessData) => {
+  console.log(businessData);
   const [res] = await pool.execute(
     "INSERT INTO businesses VALUES (null,?,?,?,?,?,?,false)",
     Object.values(businessData)
