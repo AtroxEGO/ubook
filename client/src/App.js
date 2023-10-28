@@ -14,6 +14,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMemo } from "react";
 import { removeSnack } from "./services/store/features/snackSlice";
 import BookServicePage from "./pages/BookServicePage";
+import VerifyPage from "./pages/VerifyPage";
+import RegisterPage from "./pages/RegisterPage";
+import OnlyNotAuthedRoute from "./components/OnlyNotAuthedRoute";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -54,8 +57,28 @@ function App() {
             }
           />
           <Route
+            path="/verify"
+            element={
+              <OnlyNotAuthedRoute verify>
+                <VerifyPage />
+              </OnlyNotAuthedRoute>
+            }
+          />
+          <Route
             path="/login"
-            element={<LoginPage />}
+            element={
+              <OnlyNotAuthedRoute>
+                <LoginPage />
+              </OnlyNotAuthedRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <OnlyNotAuthedRoute>
+                <RegisterPage />
+              </OnlyNotAuthedRoute>
+            }
           />
         </Routes>
       </BrowserRouter>

@@ -14,6 +14,7 @@ import {
   CardContent,
   CardHeader,
   IconButton,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText,
@@ -87,32 +88,34 @@ export default function ServiceCard({ service }) {
         sx={{
           paddingBlock: "0",
         }}>
-        <ListItem disablePadding>
-          <ListItemIcon sx={{ minWidth: "26px" }}>
-            <AccessTimeRoundedIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText>{service.duration}</ListItemText>
-          <ListItemIcon sx={{ minWidth: "26px" }}>
-            <AttachMoneyRoundedIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText>{service.price}zł</ListItemText>
-          <ListItemIcon sx={{ minWidth: "26px" }}>
-            <StarBorderRoundedIcon color="primary" />
-          </ListItemIcon>
-          <ListItemText>
-            <Typography
-              display="flex"
-              gap="0.3em"
-              alignItems="center">
-              {service.averageReview}
+        <List>
+          <ListItem disablePadding>
+            <ListItemIcon sx={{ minWidth: "26px" }}>
+              <AccessTimeRoundedIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText>{service.duration}</ListItemText>
+            <ListItemIcon sx={{ minWidth: "26px" }}>
+              <AttachMoneyRoundedIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText>{service.price}zł</ListItemText>
+            <ListItemIcon sx={{ minWidth: "26px" }}>
+              <StarBorderRoundedIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText>
               <Typography
-                fontSize="small"
-                color="text.secondary">
-                ({service.reviewCount})
+                display="flex"
+                gap="0.3em"
+                alignItems="center">
+                {service.averageReview}
+                <Typography
+                  fontSize="small"
+                  color="text.secondary">
+                  ({service.reviewCount})
+                </Typography>
               </Typography>
-            </Typography>
-          </ListItemText>
-        </ListItem>
+            </ListItemText>
+          </ListItem>
+        </List>
         <Typography
           variant="body2"
           style={{ display: "inline-block", whiteSpace: "pre-line" }}>

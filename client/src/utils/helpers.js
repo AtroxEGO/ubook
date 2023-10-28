@@ -1,3 +1,6 @@
+import { jwtDecode } from "jwt-decode";
+import { login } from "../services/store/features/account/accountSlice";
+
 export const stringToColor = (string) => {
   let hash = 0;
   let i;
@@ -16,4 +19,12 @@ export const stringToColor = (string) => {
   /* eslint-enable no-bitwise */
 
   return color;
+};
+
+export const handleLogin = (data, dispatch) => {
+  const loginData = {
+    token: data.token,
+    accountData: jwtDecode(data.token),
+  };
+  dispatch(login(loginData));
 };

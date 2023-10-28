@@ -38,7 +38,6 @@ const LandingPage = () => {
         dispatch(setFavorites(data.favorites));
       })
       .catch((error) => {
-        console.log(error);
         dispatch(setSnack(error));
       });
   }, []);
@@ -86,12 +85,18 @@ const LandingPage = () => {
               onChange={handleSearchChange}
             />
           </Box>
-          <IconButton
-            onClick={() => {
-              dispatch(logout());
-            }}>
-            <LogoutRoundedIcon fontSize="large" />
-          </IconButton>
+          <Box
+            display="flex"
+            alignItems="center">
+            <IconButton
+              name="logoutButton"
+              aria-label="log out"
+              onClick={() => {
+                dispatch(logout());
+              }}>
+              <LogoutRoundedIcon fontSize="large" />
+            </IconButton>
+          </Box>
         </Box>
         <Divider />
         {distinctCategoryNames?.map((categoryName) => {
@@ -119,7 +124,10 @@ const LandingPage = () => {
                   )
                   .filter((service) => service.category_name === categoryName)
                   .map((service) => (
-                    <ServiceCard service={service} />
+                    <ServiceCard
+                      service={service}
+                      key={service.serviceID}
+                    />
                   ))}
               </Tabs>
             </>
@@ -128,9 +136,7 @@ const LandingPage = () => {
       </Box>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-        // onClick={handleClose}
-      >
+        open={isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
     </Container>

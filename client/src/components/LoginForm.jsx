@@ -2,6 +2,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
   Avatar,
   Box,
+  Button,
   TextField,
   ThemeProvider,
   ToggleButton,
@@ -21,22 +22,14 @@ import {
   useLoginUserMutation,
 } from "../services/api/apiSlice";
 import { LoadingButton } from "@mui/lab";
-import { login } from "../services/store/features/account/accountSlice";
-import { jwtDecode } from "jwt-decode";
-
-const handleLogin = (data, dispatch) => {
-  const loginData = {
-    token: data.token,
-    accountData: jwtDecode(data.token),
-  };
-  dispatch(login(loginData));
-};
+import { handleLogin } from "../utils/helpers";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loginUser, { userLoading }] = useLoginUserMutation();
-  const [loginBusiness, { businessLoading }] = useLoginBusinessMutation();
+  const [loginUser, { isLoading: userLoading }] = useLoginUserMutation();
+  const [loginBusiness, { isLoading: businessLoading }] =
+    useLoginBusinessMutation();
   const isLoading = userLoading || businessLoading;
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
@@ -44,7 +37,7 @@ const LoginForm = () => {
     initialValues: {
       email: "pawel.polakiewicz1@gmail.com",
       password: "Test123@",
-      accountType: "user",
+      accountType: useLocation().state?.accountType || "user",
     },
     validationSchema: loginFormSchema,
     onSubmit: (values) => {
@@ -55,7 +48,6 @@ const LoginForm = () => {
         })
           .unwrap()
           .then((data) => {
-            console.log(data);
             dispatch(setSnack(data));
             handleLogin(data, dispatch);
             navigate("/");
@@ -81,7 +73,9 @@ const LoginForm = () => {
       }
     },
   });
-  const [accountType, setAccountType] = useState(formik.values.accountType);
+  const [accountType, setAccountType] = useState(
+    useLocation().state?.accountType || "user"
+  );
 
   return (
     <ThemeProvider theme={defaultTheme(accountType, prefersDarkMode)}>
@@ -160,13 +154,6 @@ const LoginForm = () => {
               Business
             </ToggleButton>
           </ToggleButtonGroup>
-          {/* {state?.path === "form" || error ? (
-            <Typography
-              textAlign="center"
-              color="error">
-              {error.data.message || state.error}
-            </Typography>
-          ) : null} */}
           <LoadingButton
             variant="contained"
             fullWidth
@@ -174,6 +161,17 @@ const LoginForm = () => {
             type="submit">
             Submit
           </LoadingButton>
+          <Typography ml="auto">
+            Dont have an Account?
+            <Button
+              onClick={() => {
+                navigate("/register", {
+                  state: { accountType: formik.values.accountType },
+                });
+              }}>
+              Register
+            </Button>
+          </Typography>
         </Box>
       </Box>
     </ThemeProvider>

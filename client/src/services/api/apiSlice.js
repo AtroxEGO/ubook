@@ -35,9 +35,29 @@ export const api = createApi({
         return { ...response.data, type: "error" };
       },
     }),
+    createUser: builder.mutation({
+      query: (body) => ({
+        url: "/user/create",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
     loginBusiness: builder.mutation({
       query: (body) => ({
         url: "/business/login",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    createBusiness: builder.mutation({
+      query: (body) => ({
+        url: "/business/create",
         method: "POST",
         body,
       }),
@@ -75,14 +95,52 @@ export const api = createApi({
         return { ...response.data, type: "error" };
       },
     }),
+    verifyUser: builder.mutation({
+      query: (body) => ({
+        url: "/user/verify",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    resendUserCode: builder.query({
+      query: () => "user/resendCode",
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    verifyBusiness: builder.mutation({
+      query: (body) => ({
+        url: "/business/verify",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    resendBusinessCode: builder.query({
+      query: () => "business/resendCode",
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
   }),
 });
 
 export const {
+  useCreateBusinessMutation,
+  useCreateUserMutation,
   useGetAllServicesQuery,
   useLoginUserMutation,
   useLoginBusinessMutation,
   useAddFavoriteMutation,
   useRemoveFavoriteMutation,
   useGetAllFavoritesMutation,
+  useVerifyUserMutation,
+  useVerifyBusinessMutation,
+  useResendUserCodeQuery,
+  useResendBusinessCodeQuery,
 } = api;
