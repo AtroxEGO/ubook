@@ -12,7 +12,7 @@ import {
 import React, { useState } from "react";
 import { loginFormSchema } from "../utils/validationSchemas";
 import { useFormik } from "formik";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import defaultTheme from "../utils/themes";
 import { useDispatch } from "react-redux";
 import { setSnack } from "../services/store/features/snackSlice";
@@ -31,6 +31,7 @@ const handleLogin = (data, dispatch) => {
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [loginUser, { isLoading }] = useLoginUserMutation();
   const formik = useFormik({
     initialValues: {
@@ -48,6 +49,7 @@ const LoginForm = () => {
         .then((data) => {
           dispatch(setSnack(data));
           handleLogin(data, dispatch);
+          navigate("/");
         })
         .catch((error) => {
           dispatch(setSnack(error));
