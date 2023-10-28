@@ -13,6 +13,7 @@ import defaultTheme from "./utils/themes";
 import { useDispatch, useSelector } from "react-redux";
 import { useMemo } from "react";
 import { removeSnack } from "./services/store/features/snackSlice";
+import BookServicePage from "./pages/BookServicePage";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -41,6 +42,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <LandingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/service"
+            element={
+              <ProtectedRoute>
+                <BookServicePage />
               </ProtectedRoute>
             }
           />

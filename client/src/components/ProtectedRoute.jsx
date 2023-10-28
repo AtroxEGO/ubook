@@ -4,10 +4,9 @@ import { Navigate } from "react-router-dom";
 import { setSnack } from "../services/store/features/snackSlice";
 
 const ProtectedRoute = ({ children }) => {
-  const user = useSelector((state) => state.accountReducer.loggedIn);
-  console.log(user);
+  const user = useSelector((state) => state.accountReducer);
   const dispatch = useDispatch();
-  if (!user) {
+  if (!user.loggedIn) {
     dispatch(setSnack({ message: "Please log in!", type: "error" }));
     return (
       <Navigate
@@ -15,6 +14,10 @@ const ProtectedRoute = ({ children }) => {
         state={{ error: "Please log in!", path: "form" }}
       />
     );
+  }
+  if (user.accountData.verified === 0) {
+    dispatch(setSnack({ message: "Verify your account!", type: "info" }));
+    return <Navigate to="/verify" />;
   }
 
   return children;

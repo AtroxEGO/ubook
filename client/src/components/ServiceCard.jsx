@@ -10,7 +10,6 @@ import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import StarBorderRoundedIcon from "@mui/icons-material/StarBorderRounded";
 import {
   Avatar,
-  Box,
   CardActions,
   CardContent,
   CardHeader,
@@ -28,32 +27,29 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setFavorites } from "../services/store/features/favoritesSlice";
 import { setSnack } from "../services/store/features/snackSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function ServiceCard({ service }) {
   const dispatch = useDispatch();
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
+  const navigate = useNavigate();
   const favorites = useSelector((state) => state.favoriteReducer.favorites);
   const handleFavoriteClick = (serviceID) => {
-    console.log("Clicked:", serviceID);
-    console.log(favorites.includes(serviceID));
     if (favorites.includes(serviceID)) {
       removeFavorite({ serviceID: serviceID })
         .unwrap()
         .then((data) => {
-          console.log(data);
           dispatch(setFavorites(data.favorites));
           dispatch(setSnack(data));
         })
         .catch((error) => {
-          console.log(error);
           dispatch(setSnack(error));
         });
     } else {
       addFavorite({ serviceID: serviceID })
         .unwrap()
         .then((data) => {
-          console.log(data);
           dispatch(setSnack(data));
           dispatch(setFavorites(data.favorites));
         })
@@ -141,7 +137,10 @@ export default function ServiceCard({ service }) {
         <Tooltip title="Check">
           <IconButton
             aria-label="check the service"
-            sx={{ marginLeft: "auto" }}>
+            sx={{ marginLeft: "auto" }}
+            onClick={() => {
+              navigate("/service", { serviceID: service.serviceID });
+            }}>
             <ArrowForwardIosRoundedIcon color="primary" />
           </IconButton>
         </Tooltip>

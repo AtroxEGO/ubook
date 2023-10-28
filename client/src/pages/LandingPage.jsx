@@ -1,36 +1,35 @@
 import {
   Backdrop,
   Box,
-  Button,
   CircularProgress,
   Container,
   Divider,
   IconButton,
-  Paper,
   Tabs,
+  TextField,
   Typography,
   capitalize,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import SearchIcon from "@mui/icons-material/Search";
 import {
   useGetAllFavoritesMutation,
   useGetAllServicesQuery,
 } from "../services/api/apiSlice";
-import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import styled from "@emotion/styled";
 import ServiceCard from "../components/ServiceCard";
 import { setFavorites } from "../services/store/features/favoritesSlice";
 import { setSnack } from "../services/store/features/snackSlice";
 import { logout } from "../services/store/features/account/accountSlice";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const accountData = useSelector((state) => state.accountReducer.accountData);
-  const { data, isLoading, error } = useGetAllServicesQuery();
+  const { data, isLoading } = useGetAllServicesQuery();
   const [getAllFavorites] = useGetAllFavoritesMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllFavorites()
@@ -44,25 +43,49 @@ const LandingPage = () => {
       });
   }, []);
 
-  const categorizedServices = {};
+  const uniqueCategories = new Set();
 
-  data?.forEach((elem) => {
-    if (!categorizedServices[elem.category_name]) {
-      categorizedServices[elem.category_name] = [];
+  data?.forEach((item) => {
+    if (item.category_name) {
+      uniqueCategories.add(item.category_name);
     }
-
-    categorizedServices[elem.category_name].push(elem);
   });
+
+  const distinctCategoryNames = Array.from(uniqueCategories);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
 
   return (
     <Container maxWidth="xl">
       <Box mt={5}>
-        <Box
-          display="flex"
-          justifyContent="space-between">
-          <Typography variant="h4">
-            {capitalize(accountData.account)}
+        <Box display="flex">
+          <Typography
+            sx={{ cursor: "pointer", userSelect: "none" }}
+            onClick={() => {
+              navigate("/");
+            }}
+            variant="h4"
+            width="100%">
+            UBook | {capitalize(accountData.account)}
           </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "flex-end",
+              mb: 2,
+              width: "100%",
+            }}>
+            <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
+            <TextField
+              id="search-bar"
+              label="Search"
+              variant="standard"
+              onChange={handleSearchChange}
+            />
+          </Box>
           <IconButton
             onClick={() => {
               dispatch(logout());
@@ -71,28 +94,32 @@ const LandingPage = () => {
           </IconButton>
         </Box>
         <Divider />
-
-        {Object.keys(categorizedServices)?.map((elem) => {
+        {distinctCategoryNames?.map((categoryName) => {
           return (
             <>
               <Typography
                 mt={2}
                 color="text.secondary"
                 variant="h5">
-                {elem}
+                {categoryName}
               </Typography>
               <Tabs
                 variant="scrollable"
                 scrollButtons
                 value={0}
                 aria-label="scrollable auto tabs example">
-                {Object.values(categorizedServices)
-                  .filter(([service]) => service.category_name === elem)
-                  .map(([serviceData]) => (
-                    <ServiceCard
-                      service={serviceData}
-                      key={serviceData.id}
-                    />
+                {data
+                  .filter(
+                    (service) =>
+                      service.name.toLowerCase().includes(searchTerm) ||
+                      service.description.toLowerCase().includes(searchTerm) ||
+                      service.subcategory_name
+                        .toLowerCase()
+                        .includes(searchTerm)
+                  )
+                  .filter((service) => service.category_name === categoryName)
+                  .map((service) => (
+                    <ServiceCard service={service} />
                   ))}
               </Tabs>
             </>
