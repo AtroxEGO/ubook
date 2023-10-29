@@ -4,7 +4,7 @@ const { QueryAllBookingsForDay } = require("../services/BookingTable");
 const getAvaiableHoursAsTimestamps = async (service, date) => {
   const serviceHoursAvailable = generateAvailableHours(service);
   const activeBookingsForThisDay = await QueryAllBookingsForDay(
-    service.id,
+    service.serviceID,
     date.format("YYYY-MM-DD")
   );
 
@@ -15,7 +15,12 @@ const getAvaiableHoursAsTimestamps = async (service, date) => {
     );
   }
 
-  const filteredArray = serviceHoursAvailable.filter((item) => {
+  const serviceHoursAfterNow = serviceHoursAvailable.filter((item) => {
+    const startTime = item.startTime.format();
+    return moment(startTime).isAfter(moment.now());
+  });
+
+  const filteredArray = serviceHoursAfterNow.filter((item) => {
     const startTime = item.startTime.format(); // Convert to a string for comparison
 
     return !activeBookingsForThisDay.some((secondItem) => {

@@ -1,6 +1,7 @@
 const Error = require("../helpers/Error");
 const errorMessages = require("../helpers/ErrorMessages");
 const Notification = require("../helpers/Notification");
+const moment = require("moment");
 const {
   QueryAllBookingsByUserID,
   QueryAllBookingsByServiceID,
@@ -9,7 +10,12 @@ const {
   QueryUpcomingBookingsByOwnerID,
   DeleteBookingByUserAndBookingID,
   DeleteBookingByBusinessIDAndBookingID,
+  InsertBookingForDay,
+  QueryArchiveBookingsByUserID,
+  QueryArchiveBookingsByOwnerID,
 } = require("../services/BookingTable");
+const { QueryServiceById } = require("../services/ServicesTable");
+const { getAvaiableHoursAsTimestamps } = require("../helpers/Booking");
 
 // Get all bookings for user/business
 const GetAllBookings = async (req, res) => {
@@ -28,11 +34,23 @@ const GetUpcomingBookings = async (req, res) => {
   const userID = req.userData.id;
   const accountType = req.userData.account;
 
-  const allBookings =
+  const upcomingBookings =
     accountType === "user"
       ? await QueryUpcomingBookingsByUserID(userID)
       : await QueryUpcomingBookingsByOwnerID(userID);
-  res.json(allBookings);
+  res.json(upcomingBookings);
+};
+
+// Get all bookings for user/business
+const GetArchiveBookings = async (req, res) => {
+  const userID = req.userData.id;
+  const accountType = req.userData.account;
+
+  const archiveBookings =
+    accountType === "user"
+      ? await QueryArchiveBookingsByUserID(userID)
+      : await QueryArchiveBookingsByOwnerID(userID);
+  res.json(archiveBookings);
 };
 
 // Get all bookings for user/business
@@ -45,7 +63,6 @@ const RemoveBookingByID = async (req, res) => {
     accountType === "user"
       ? await DeleteBookingByUserAndBookingID(userID, bookingID)
       : await DeleteBookingByBusinessIDAndBookingID(userID, bookingID);
-  console.log(result);
   if (result.affectedRows === 0)
     return res
       .status(400)
@@ -55,12 +72,37 @@ const RemoveBookingByID = async (req, res) => {
 };
 
 const CreateNewBooking = async (req, res) => {
-  res.json("Ok");
+  const serviceID = req.body.serviceID;
+  const timestamp = moment(req.body.timestamp);
+
+  if (!timestamp.isValid() || timestamp.isBefore(moment.now()))
+    return res.status(400).json(Error(errorMessages.invalidData));
+
+  if (!serviceID || !timestamp)
+    return res.status(400).json(Error(errorMessages.missingData));
+
+  const service = await QueryServiceById(serviceID);
+  if (!service) return res.status(400).json(Error(errorMessages.doesntExist));
+
+  const availableHours = await getAvaiableHoursAsTimestamps(service, timestamp);
+
+  const includesTargetStartTime = availableHours.some((item) =>
+    item.startTime.isSame(timestamp)
+  );
+  if (!includesTargetStartTime)
+    return res.status(400).json(Error(errorMessages.invalidData));
+  try {
+    await InsertBookingForDay(req.userData.id, serviceID, timestamp.toDate());
+    res.json(Notification("Successfully booked the service"));
+  } catch (error) {
+    res.status(400).json(error);
+  }
 };
 
 module.exports = {
   GetAllBookings,
   GetUpcomingBookings,
   RemoveBookingByID,
+  GetArchiveBookings,
   CreateNewBooking,
 };

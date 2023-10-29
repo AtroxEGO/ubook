@@ -1,4 +1,5 @@
 const { pool } = require("../helpers/Database");
+const Error = require("../helpers/Error");
 const errorMessages = require("../helpers/ErrorMessages");
 
 const QueryAllBookingsForDay = async (serviceID, date) => {
@@ -40,9 +41,27 @@ const QueryAllBookingsByUserID = async (userID) => {
   return res;
 };
 
-const QueryUpcomingBookingsByUserID = async (userID) => {
+const QueryArchiveBookingsByUserID = async (userID) => {
+  // `SELECT * FROM bookings WHERE user_id = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) < NOW();`,
   const [res] = await pool.execute(
-    `SELECT * FROM bookings WHERE user_id = ? AND timestamp > NOW();`,
+    `SELECT bookings.id, timestamp, accepted, services.name, description, image_url, price, duration, subcategory_name, businesses.name as creator_name, avatar_url, address FROM bookings 
+    LEFT JOIN services ON bookings.service_id = services.id
+    LEFT JOIN subcategories ON services.subcategory = subcategories.id
+    LEFT JOIN businesses ON businesses.id = services.created_by
+    WHERE user_id = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) < NOW();`,
+    [userID]
+  );
+  return res;
+};
+
+const QueryUpcomingBookingsByUserID = async (userID) => {
+  // `SELECT * FROM bookings WHERE user_id = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) > NOW();`,
+  const [res] = await pool.execute(
+    `SELECT bookings.id, timestamp, accepted, services.name, description, image_url, price, duration, subcategory_name, businesses.name as creator_name, avatar_url, address FROM bookings 
+    LEFT JOIN services ON bookings.service_id = services.id
+    LEFT JOIN subcategories ON services.subcategory = subcategories.id
+    LEFT JOIN businesses ON businesses.id = services.created_by
+    WHERE user_id = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) > NOW();`,
     [userID]
   );
   return res;
@@ -56,20 +75,32 @@ const QueryAllBookingsByOwnerID = async (userID) => {
   return res;
 };
 
+const QueryArchiveBookingsByOwnerID = async (userID) => {
+  const [res] = await pool.execute(
+    `SELECT * FROM bookings WHERE (SELECT services.created_by FROM services WHERE services.id = service_id) = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) < NOW();`,
+    [userID]
+  );
+  return res;
+};
+
 const QueryUpcomingBookingsByOwnerID = async (userID) => {
   const [res] = await pool.execute(
-    `SELECT * FROM bookings WHERE (SELECT services.created_by FROM services WHERE services.id = service_id) = ? AND timestamp > NOW();`,
+    `SELECT * FROM bookings WHERE (SELECT services.created_by FROM services WHERE services.id = service_id) = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) > NOW();`,
     [userID]
   );
   return res;
 };
 
 const InsertBookingForDay = async (userID, serviceID, date) => {
-  const [res] = await pool.execute(
-    `INSERT INTO bookings (user_id,service_id,timestamp) VALUES (?,?,?);`,
-    [userID, serviceID, date]
-  );
-  return res;
+  try {
+    const [res] = await pool.execute(
+      `INSERT INTO bookings (user_id,service_id,timestamp) VALUES (?,?,?);`,
+      [userID, serviceID, date]
+    );
+    return res;
+  } catch (error) {
+    throw Error(errorMessages[error.code]);
+  }
 };
 
 const DeleteBookingByID = async (bookingID) => {
@@ -101,8 +132,10 @@ module.exports = {
   QueryUpcomingBookingsByServiceID,
   QueryAllBookingsByUserID,
   QueryUpcomingBookingsByUserID,
+  QueryArchiveBookingsByOwnerID,
   InsertBookingForDay,
   QueryBookingByID,
+  QueryArchiveBookingsByUserID,
   DeleteBookingByID,
   QueryAllBookingsByOwnerID,
   QueryUpcomingBookingsByOwnerID,

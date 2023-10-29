@@ -10,9 +10,11 @@ const errorMessages = require("../helpers/ErrorMessages");
 
 const Error = (code, path = "general") => {
   const message = errorMessages[code] || code;
+  const type = "error";
   return {
     message,
     path,
+    type, // TODO: Check if this is needed
   };
 };
 

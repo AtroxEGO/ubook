@@ -5,6 +5,7 @@ const {
   InsertReview,
   DeleteReview,
   QueryAllReviewsForService,
+  QueryReviewForServiceByUser,
 } = require("../services/ReviewsTable");
 
 // Add new service to user favorites
@@ -36,6 +37,15 @@ const RemoveReview = async (req, res) => {
   }
 };
 
+const GetReviewForServiceByUser = async (req, res) => {
+  const userID = req.userData.id;
+  const serviceID = req.body.serviceID;
+
+  const result = await QueryReviewForServiceByUser(serviceID, userID);
+
+  res.json(result || { review: 0 });
+};
+
 // Get average of reviews for a service
 const GetAverageReview = async (req, res) => {
   const serviceID = req.body.serviceID;
@@ -57,4 +67,9 @@ const GetAverageReview = async (req, res) => {
   }
 };
 
-module.exports = { AddReview, RemoveReview, GetAverageReview };
+module.exports = {
+  AddReview,
+  RemoveReview,
+  GetAverageReview,
+  GetReviewForServiceByUser,
+};

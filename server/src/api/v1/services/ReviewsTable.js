@@ -36,4 +36,21 @@ const QueryAllReviewsForService = async (serviceID) => {
   }
 };
 
-module.exports = { InsertReview, DeleteReview, QueryAllReviewsForService };
+const QueryReviewForServiceByUser = async (serviceID, userID) => {
+  try {
+    const [[res]] = await pool.execute(
+      "SELECT review FROM reviews WHERE service_id = ? and user_id = ?",
+      [serviceID, userID]
+    );
+    return res;
+  } catch (error) {
+    throw Error(error.code);
+  }
+};
+
+module.exports = {
+  InsertReview,
+  DeleteReview,
+  QueryAllReviewsForService,
+  QueryReviewForServiceByUser,
+};

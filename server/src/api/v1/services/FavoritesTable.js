@@ -23,10 +23,18 @@ const DeleteFavorite = async ({ userID, serviceID }) => {
 
 const QueryAllFavorites = async (userID) => {
   const [res] = await pool.execute(
-    "SELECT service_id FROM favorites WHERE user_id = ?",
+    `SELECT favorites.service_id as serviceID, services.name, description, image_url, price, duration, gap, serviceHourStart, serviceHourEnd,subcategory_name, category_name, businesses.name as creator_name, address, avatar_url, ROUND(COALESCE(AVG(reviews.review), 0), 1) as averageReview, COUNT(reviews.review) as reviewCount
+    FROM favorites 
+    LEFT JOIN services on services.id = favorites.service_id
+    LEFT JOIN subcategories on subcategories.id = services.subcategory
+    LEFT JOIN categories on categories.id = subcategories.category_id
+    LEFT JOIN businesses on businesses.id = services.created_by
+    LEFT JOIN reviews ON reviews.service_id = favorites.service_id
+    WHERE favorites.user_id = ?
+    GROUP BY services.id, services.name, description, image_url, price, duration, gap, serviceHourStart, serviceHourEnd,subcategory_name, category_name, businesses.name, address, avatar_url,favorites.service_id;`,
     [userID]
   );
-  return res.map((row) => row.service_id);
+  return res;
 };
 
 module.exports = { InsertFavorite, DeleteFavorite, QueryAllFavorites };
