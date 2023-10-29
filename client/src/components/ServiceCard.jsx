@@ -43,7 +43,7 @@ export default function ServiceCard({ service }) {
       removeFavorite({ serviceID: serviceID })
         .unwrap()
         .then((data) => {
-          dispatch(setFavorites(data.favorites));
+          dispatch(setFavorites(data.favorites.map((item) => item.serviceID)));
           dispatch(setSnack(data));
         })
         .catch((error) => {
@@ -54,7 +54,7 @@ export default function ServiceCard({ service }) {
         .unwrap()
         .then((data) => {
           dispatch(setSnack(data));
-          dispatch(setFavorites(data.favorites));
+          dispatch(setFavorites(data.favorites.map((item) => item.serviceID)));
         })
         .catch((error) => {
           console.log(error);

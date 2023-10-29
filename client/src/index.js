@@ -5,6 +5,8 @@ import App from "./App";
 import reportWebVitals from "./utils/reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./services/store/store";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 // #TODO:
 // - Optimize landing page search bar
@@ -13,7 +15,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
   <Provider store={store}>
-    <App />
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+      <App />
+    </LocalizationProvider>
   </Provider>
   // {/* </React.StrictMode> */}
 );

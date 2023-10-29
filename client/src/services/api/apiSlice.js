@@ -35,6 +35,26 @@ export const api = createApi({
         return { ...response.data, type: "error" };
       },
     }),
+    getServiceHoursForDay: builder.mutation({
+      query: (body) => ({
+        url: "/services/getAvailableHours",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    bookService: builder.mutation({
+      query: (body) => ({
+        url: "/bookings/new",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
     loginUser: builder.mutation({
       query: (body) => ({
         url: "/user/login",
@@ -137,6 +157,56 @@ export const api = createApi({
         return { ...response.data, type: "error" };
       },
     }),
+    getUpcomingBookings: builder.mutation({
+      query: (body) => ({
+        url: "/bookings/getUpcoming",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    getArchiveBookings: builder.mutation({
+      query: (body) => ({
+        url: "/bookings/getArchive",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    getReviewByUser: builder.mutation({
+      query: (body) => ({
+        url: "/reviews/getReviewByUser",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    addReview: builder.mutation({
+      query: (body) => ({
+        url: "/reviews/add",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    removeReview: builder.mutation({
+      query: (body) => ({
+        url: "/reviews/remove",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
   }),
 });
 
@@ -144,6 +214,8 @@ export const {
   useCreateBusinessMutation,
   useCreateUserMutation,
   useGetAllServicesQuery,
+  useGetServiceHoursForDayMutation,
+  useBookServiceMutation,
   useGetServiceByIDMutation,
   useLoginUserMutation,
   useLoginBusinessMutation,
@@ -154,4 +226,9 @@ export const {
   useVerifyBusinessMutation,
   useResendUserCodeQuery,
   useResendBusinessCodeQuery,
+  useGetUpcomingBookingsMutation,
+  useGetArchiveBookingsMutation,
+  useGetReviewByUserMutation,
+  useAddReviewMutation,
+  useRemoveReviewMutation,
 } = api;

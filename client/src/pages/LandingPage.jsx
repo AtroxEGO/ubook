@@ -7,13 +7,15 @@ import {
   IconButton,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
   capitalize,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SearchIcon from "@mui/icons-material/Search";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
   useGetAllFavoritesMutation,
   useGetAllServicesQuery,
@@ -23,8 +25,11 @@ import { setFavorites } from "../services/store/features/favoritesSlice";
 import { setSnack } from "../services/store/features/snackSlice";
 import { logout } from "../services/store/features/account/accountSlice";
 import { useNavigate } from "react-router-dom";
+import { Favorite } from "@mui/icons-material";
 
 const LandingPage = () => {
+  const MemoizedServiceCard = React.memo(ServiceCard);
+
   const accountData = useSelector((state) => state.accountReducer.accountData);
   const { data, isLoading } = useGetAllServicesQuery();
   const [getAllFavorites] = useGetAllFavoritesMutation();
@@ -35,7 +40,7 @@ const LandingPage = () => {
     getAllFavorites()
       .unwrap()
       .then((data) => {
-        dispatch(setFavorites(data.favorites));
+        dispatch(setFavorites(data.favorites.map((item) => item.serviceID)));
       })
       .catch((error) => {
         dispatch(setSnack(error));
@@ -56,6 +61,15 @@ const LandingPage = () => {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
   };
+
+  const filteredData = useMemo(() => {
+    return data?.filter(
+      (service) =>
+        service.name.toLowerCase().includes(searchTerm) ||
+        service.description.toLowerCase().includes(searchTerm) ||
+        service.subcategory_name.toLowerCase().includes(searchTerm)
+    );
+  }, [data, searchTerm]);
 
   return (
     <Container maxWidth="xl">
@@ -88,6 +102,16 @@ const LandingPage = () => {
           <Box
             display="flex"
             alignItems="center">
+            <IconButton onClick={() => navigate("/favorite")}>
+              <Tooltip title="Favorite">
+                <Favorite fontSize="large" />
+              </Tooltip>
+            </IconButton>
+            <IconButton onClick={() => navigate("/myBookings")}>
+              <Tooltip title="Bookings">
+                <CalendarMonthIcon fontSize="large" />
+              </Tooltip>
+            </IconButton>
             <IconButton
               name="logoutButton"
               aria-label="log out"
@@ -95,7 +119,9 @@ const LandingPage = () => {
                 dispatch(logout());
                 navigate("/login");
               }}>
-              <LogoutRoundedIcon fontSize="large" />
+              <Tooltip title="Log out">
+                <LogoutRoundedIcon fontSize="large" />
+              </Tooltip>
             </IconButton>
           </Box>
         </Box>
@@ -113,19 +139,11 @@ const LandingPage = () => {
                 variant="scrollable"
                 scrollButtons
                 value={0}
-                aria-label="scrollable auto tabs example">
-                {data
-                  .filter(
-                    (service) =>
-                      service.name.toLowerCase().includes(searchTerm) ||
-                      service.description.toLowerCase().includes(searchTerm) ||
-                      service.subcategory_name
-                        .toLowerCase()
-                        .includes(searchTerm)
-                  )
+                aria-label="scrollable categorized services">
+                {filteredData
                   .filter((service) => service.category_name === categoryName)
                   .map((service) => (
-                    <ServiceCard
+                    <MemoizedServiceCard
                       service={service}
                       key={service.serviceID}
                     />

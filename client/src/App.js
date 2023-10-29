@@ -17,6 +17,9 @@ import BookServicePage from "./pages/BookServicePage";
 import VerifyPage from "./pages/VerifyPage";
 import RegisterPage from "./pages/RegisterPage";
 import OnlyNotAuthedRoute from "./components/OnlyNotAuthedRoute";
+import MyBookingsPage from "./pages/MyBookingsPage";
+import FavoritePage from "./pages/FavoritePage";
+import Page404 from "./pages/Page404";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -57,6 +60,22 @@ function App() {
             }
           />
           <Route
+            path="/myBookings"
+            element={
+              <ProtectedRoute>
+                <MyBookingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/favorite"
+            element={
+              <ProtectedRoute>
+                <FavoritePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/verify"
             element={
               <OnlyNotAuthedRoute verify>
@@ -79,6 +98,10 @@ function App() {
                 <RegisterPage />
               </OnlyNotAuthedRoute>
             }
+          />
+          <Route
+            path="*"
+            element={<Page404 />}
           />
         </Routes>
       </BrowserRouter>
