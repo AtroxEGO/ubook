@@ -17,8 +17,6 @@ import { logout } from "../services/store/features/account/accountSlice";
 import { useNavigate } from "react-router-dom";
 import {
   api,
-  useResendBusinessCodeQuery,
-  useResendUserCodeQuery,
   useVerifyBusinessMutation,
   useVerifyUserMutation,
 } from "../services/api/apiSlice";

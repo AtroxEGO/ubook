@@ -17,10 +17,20 @@ export const api = createApi({
   transformErrorResponse: (response, meta, arg) => {
     return { ...response.data, type: "error" };
   },
-  keepUnusedDataFor: 1,
+  keepUnusedDataFor: 30,
   endpoints: (builder) => ({
     getAllServices: builder.query({
       query: () => "services/getAll",
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    getServiceByID: builder.mutation({
+      query: (body) => ({
+        url: "/services/getById",
+        method: "POST",
+        body,
+      }),
       transformErrorResponse: (response, meta, arg) => {
         return { ...response.data, type: "error" };
       },
@@ -134,6 +144,7 @@ export const {
   useCreateBusinessMutation,
   useCreateUserMutation,
   useGetAllServicesQuery,
+  useGetServiceByIDMutation,
   useLoginUserMutation,
   useLoginBusinessMutation,
   useAddFavoriteMutation,

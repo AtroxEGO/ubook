@@ -58,7 +58,7 @@ export const BusinessRegisterFormInputs = ({ businessFormik }) => {
           businessFormik.touched.password && businessFormik.errors.password
         }
       />
-      <AddressAutocomplete
+      {/* <AddressAutocomplete
         apiKey={process.env.REACT_APP_PLACES_API_KEY}
         label="Address"
         name="address"
@@ -69,7 +69,7 @@ export const BusinessRegisterFormInputs = ({ businessFormik }) => {
         onChange={(_, value) => {
           businessFormik.setFieldValue("address", value?.formatted_address);
         }}
-      />
+      /> */}
       <FormControlLabel
         control={
           <Checkbox

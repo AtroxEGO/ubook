@@ -12,8 +12,8 @@ export const snackSlice = createSlice({
   reducers: {
     setSnack: (state, action) => {
       state.open = true;
-      state.message = action.payload.message;
-      state.type = action.payload.type;
+      state.message = action.payload.message || "Unexpected error";
+      state.type = action.payload.type || "error";
     },
     removeSnack: (state) => {
       state.open = false;

@@ -93,6 +93,7 @@ const LandingPage = () => {
               aria-label="log out"
               onClick={() => {
                 dispatch(logout());
+                navigate("/login");
               }}>
               <LogoutRoundedIcon fontSize="large" />
             </IconButton>

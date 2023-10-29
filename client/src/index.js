@@ -6,6 +6,9 @@ import reportWebVitals from "./utils/reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./services/store/store";
 
+// #TODO:
+// - Optimize landing page search bar
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>

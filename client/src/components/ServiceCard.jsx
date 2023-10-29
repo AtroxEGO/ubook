@@ -10,9 +10,11 @@ import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import StarBorderRoundedIcon from "@mui/icons-material/StarBorderRounded";
 import {
   Avatar,
+  Box,
   CardActions,
   CardContent,
   CardHeader,
+  Icon,
   IconButton,
   List,
   ListItem,
@@ -83,23 +85,42 @@ export default function ServiceCard({ service }) {
         }
         title={service.name}
         subheader={service.subcategory_name}
+        sx={{ pb: 0 }}
       />
       <CardContent
         sx={{
           paddingBlock: "0",
         }}>
+        {/* <Box display="flex">
+          <Box
+            display="flex"
+            gap={0.5}>
+            <Tooltip
+              title="Duration"
+              sx={{ display: "flex", width: "20em" }}>
+              <AccessTimeRoundedIcon color="primary" />
+              <Typography>{service.duration}</Typography>
+            </Tooltip>
+          </Box>
+        </Box> */}
         <List>
           <ListItem disablePadding>
-            <ListItemIcon sx={{ minWidth: "26px" }}>
-              <AccessTimeRoundedIcon color="primary" />
+            <ListItemIcon sx={{ minWidth: "26px", mr: 0.5 }}>
+              <Tooltip title="Duration">
+                <AccessTimeRoundedIcon color="primary" />
+              </Tooltip>
             </ListItemIcon>
             <ListItemText>{service.duration}</ListItemText>
             <ListItemIcon sx={{ minWidth: "26px" }}>
-              <AttachMoneyRoundedIcon color="primary" />
+              <Tooltip title="Price">
+                <AttachMoneyRoundedIcon color="primary" />
+              </Tooltip>
             </ListItemIcon>
             <ListItemText>{service.price}zł</ListItemText>
             <ListItemIcon sx={{ minWidth: "26px" }}>
-              <StarBorderRoundedIcon color="primary" />
+              <Tooltip title="Rating">
+                <StarBorderRoundedIcon color="primary" />
+              </Tooltip>
             </ListItemIcon>
             <ListItemText>
               <Typography
@@ -142,7 +163,7 @@ export default function ServiceCard({ service }) {
             aria-label="check the service"
             sx={{ marginLeft: "auto" }}
             onClick={() => {
-              navigate("/service", { serviceID: service.serviceID });
+              navigate("/service", { state: { serviceID: service.serviceID } });
             }}>
             <ArrowForwardIosRoundedIcon color="primary" />
           </IconButton>
