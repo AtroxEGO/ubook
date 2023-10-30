@@ -5,6 +5,7 @@ const {
   RemoveBookingByID,
   CreateNewBooking,
   GetArchiveBookings,
+  GetBookingsForTimeframeByCreatorID,
 } = require("../controllers/Bookings");
 const CorrectAccountType = require("../middlewares/CorrectAccountTypeMiddleware");
 const router = express.Router();
@@ -14,6 +15,13 @@ router.post("/getUpcoming", GetUpcomingBookings);
 
 // Get all bookings for user/business
 router.post("/getAll", GetAllBookings);
+
+// Get bookings for business for a timeframe
+router.post(
+  "/getForTimeframe",
+  [CorrectAccountType("business")],
+  GetBookingsForTimeframeByCreatorID
+);
 
 // Get archive bookings for user/business
 router.post("/getArchive", GetArchiveBookings);

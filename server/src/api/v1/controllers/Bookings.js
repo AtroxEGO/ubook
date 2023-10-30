@@ -13,6 +13,7 @@ const {
   InsertBookingForDay,
   QueryArchiveBookingsByUserID,
   QueryArchiveBookingsByOwnerID,
+  QueryBookingsForGivenTimeFrameByCreatorID,
 } = require("../services/BookingTable");
 const { QueryServiceById } = require("../services/ServicesTable");
 const { getAvaiableHoursAsTimestamps } = require("../helpers/Booking");
@@ -92,16 +93,33 @@ const CreateNewBooking = async (req, res) => {
   if (!includesTargetStartTime)
     return res.status(400).json(Error(errorMessages.invalidData));
   try {
-    await InsertBookingForDay(req.userData.id, serviceID, timestamp.toDate());
+    await InsertBookingForDay(req.userData.id, serviceID, timestamp.format());
     res.json(Notification("Successfully booked the service"));
   } catch (error) {
     res.status(400).json(error);
   }
 };
 
+const GetBookingsForTimeframeByCreatorID = async (req, res) => {
+  const creatorID = req.userData.id;
+  const startTimestamp = req.body.start ? moment(req.body.start) : null;
+  const endTimestamp = req.body.end ? moment(req.body.end) : null;
+
+  if (!startTimestamp || !endTimestamp)
+    return res.status(400).json(Error(errorMessages.missingData));
+
+  const bookings = await QueryBookingsForGivenTimeFrameByCreatorID(
+    creatorID,
+    startTimestamp,
+    endTimestamp
+  );
+  res.json(bookings);
+};
+
 module.exports = {
   GetAllBookings,
   GetUpcomingBookings,
+  GetBookingsForTimeframeByCreatorID,
   RemoveBookingByID,
   GetArchiveBookings,
   CreateNewBooking,

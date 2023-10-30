@@ -126,6 +126,28 @@ const DeleteBookingByBusinessIDAndBookingID = async (businessID, bookingID) => {
   return res;
 };
 
+const QueryBookingsForGivenTimeFrameByCreatorID = async (
+  creatorID,
+  startTimestamp,
+  endTimestamp
+) => {
+  const startDate = startTimestamp.format("YYYY-MM-DD");
+  const endDate = endTimestamp.format("YYYY-MM-DD");
+
+  const [res] = await pool.execute(
+    `SELECT bookings.id as event_id, CONCAT(users.first_name," ",users.last_name) as booker_full_name, TIMESTAMP(timestamp) as start, TIMESTAMP(DATE_ADD(timestamp, INTERVAL duration MINUTE)) as end, accepted, services.name as title, subcategory_name
+    FROM bookings
+    LEFT JOIN services ON bookings.service_id = services.id
+    LEFT JOIN subcategories ON services.subcategory = subcategories.id
+    LEFT JOIN businesses ON businesses.id = services.created_by
+    LEFT JOIN users on users.id = bookings.user_id
+    WHERE services.created_by = ?
+    AND bookings.timestamp BETWEEN DATE_SUB(?, INTERVAL 1 SECOND) AND DATE_ADD(?, INTERVAL 1 DAY);`,
+    [creatorID, startDate, endDate]
+  );
+  return res;
+};
+
 module.exports = {
   QueryAllBookingsForDay,
   QueryAllBookingsByServiceID,
@@ -141,4 +163,5 @@ module.exports = {
   QueryUpcomingBookingsByOwnerID,
   DeleteBookingByUserAndBookingID,
   DeleteBookingByBusinessIDAndBookingID,
+  QueryBookingsForGivenTimeFrameByCreatorID,
 };
