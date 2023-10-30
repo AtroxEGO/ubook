@@ -167,6 +167,16 @@ export const api = createApi({
         return { ...response.data, type: "error" };
       },
     }),
+    getBookingsForTimeframe: builder.mutation({
+      query: (body) => ({
+        url: "/bookings/getForTimeframe",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
     getArchiveBookings: builder.mutation({
       query: (body) => ({
         url: "/bookings/getArchive",
@@ -228,6 +238,7 @@ export const {
   useResendBusinessCodeQuery,
   useGetUpcomingBookingsMutation,
   useGetArchiveBookingsMutation,
+  useGetBookingsForTimeframeMutation,
   useGetReviewByUserMutation,
   useAddReviewMutation,
   useRemoveReviewMutation,
