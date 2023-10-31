@@ -62,7 +62,6 @@ const LoginForm = () => {
         })
           .unwrap()
           .then((data) => {
-            console.log(data);
             dispatch(setSnack(data));
             handleLogin(data, dispatch);
             navigate("/");

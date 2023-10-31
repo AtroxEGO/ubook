@@ -3,6 +3,7 @@ import {
   Container,
   Divider,
   IconButton,
+  InputAdornment,
   TextField,
   Tooltip,
   Typography,
@@ -33,12 +34,18 @@ export function Navbar(props) {
       component="nav"
       sx={{ mb: 4 }}
       maxWidth="xl">
-      <Box display="flex">
+      <Box
+        display="flex"
+        gap={1}
+        sx={{
+          flexWrap: { xs: "wrap", sm: "nowrap" },
+          justifyContent: { xs: "center", sm: "space-between" },
+        }}>
         {props.title ? (
           <Box
             display="flex"
             alignItems="center"
-            width="100%">
+            sx={{ width: { xs: "100%", sm: "fit-content" } }}>
             <IconButton onClick={() => navigate(-1)}>
               <Tooltip title="Back">
                 <ArrowBackIcon
@@ -58,14 +65,18 @@ export function Navbar(props) {
           <Typography
             color="primary"
             sx={{
+              mr: { xs: 0, sm: 1 },
               cursor: "pointer",
               userSelect: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: { xs: "center", sm: "flex-start" },
+              minWidth: { xs: "100%", sm: "fit-content" },
             }}
             onClick={() => {
               navigate("/");
             }}
-            variant="h4"
-            width="100%">
+            variant="h4">
             UBook | {capitalize(accountData.account)}
           </Typography>
         )}
@@ -76,23 +87,25 @@ export function Navbar(props) {
                 sx={{
                   display: "flex",
                   alignItems: "flex-end",
-                  mb: 2,
-                  width: "100%",
+                  mb: 0.6,
                 }}>
-                <SearchIcon
-                  color="primary"
-                  sx={{
-                    mr: 1,
-                    my: 0.5,
-                  }}
-                />
-                <TextField
-                  id="search-bar"
-                  color="primary"
-                  label="Search"
-                  variant="standard"
-                  onChange={props.handleSearchChange}
-                />
+                <Tooltip title="Search">
+                  <TextField
+                    id="search-bar"
+                    color="primary"
+                    // label="Search"
+                    size="small"
+                    variant="outlined"
+                    onChange={props.handleSearchChange}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Tooltip>
               </Box>
             )}
             <Box
@@ -127,7 +140,12 @@ export function Navbar(props) {
             </Box>
           </>
         ) : (
-          <>
+          <Box
+            display="flex"
+            justifyContent="center"
+            sx={{
+              width: { xs: "100%", sm: "fit-content" },
+            }}>
             <Box
               display="flex"
               alignItems="center">
@@ -163,7 +181,7 @@ export function Navbar(props) {
                 </Tooltip>
               </IconButton>
             </Box>
-          </>
+          </Box>
         )}
       </Box>
       <Divider />

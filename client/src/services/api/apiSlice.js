@@ -243,6 +243,16 @@ export const api = createApi({
         return { ...response.data, type: "error" };
       },
     }),
+    createService: builder.mutation({
+      query: (body) => ({
+        url: "/manage/createService",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
   }),
 });
 
@@ -271,4 +281,5 @@ export const {
   useRemoveReviewMutation,
   useRemoveBookingMutation,
   useAcceptBookingMutation,
+  useCreateServiceMutation,
 } = api;

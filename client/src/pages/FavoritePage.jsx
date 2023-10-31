@@ -23,14 +23,14 @@ const FavoritePage = () => {
     <Container
       component="main"
       maxWidth="lg">
-      <Box mt={8}>
+      <Box mt={5}>
         <Navbar title="Favorites" />
         <Box
           display="flex"
           flexWrap="wrap"
           justifyContent="center"
           gap={1}>
-          {favoriteServices &&
+          {favoriteServices && favoriteServices.length > 0 ? (
             favoriteServices.map((favorite) => {
               return (
                 <ServiceCard
@@ -38,7 +38,10 @@ const FavoritePage = () => {
                   service={favorite}
                 />
               );
-            })}
+            })
+          ) : (
+            <>None!</>
+          )}
         </Box>
       </Box>
     </Container>

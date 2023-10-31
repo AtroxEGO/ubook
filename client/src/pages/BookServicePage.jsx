@@ -33,36 +33,14 @@ import { DateCalendar } from "@mui/x-date-pickers";
 import moment from "moment/moment";
 import { LoadingButton } from "@mui/lab";
 
-const BookServicePage = () => {
-  const location = useLocation();
+function RatingComponent({ serviceID }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [reviewValue, setReviewValue] = useState(0);
-  const [getServiceData] = useGetServiceByIDMutation();
   const [addReview] = useAddReviewMutation();
-  const [removeReview] = useRemoveReviewMutation();
   const [getReviewByUser] = useGetReviewByUserMutation();
-  const [getAvailableHours] = useGetServiceHoursForDayMutation();
-  const [bookService, { isLoading: bookActionLoading }] =
-    useBookServiceMutation();
-  const [serviceData, setServiceData] = useState();
-  const [selectedDay, setSelectedDay] = useState(moment().format("YYYY-MM-DD"));
-  const [availableHours, setAvailableHours] = useState();
-  const [selectedHour, setSelectedHour] = useState();
-
-  const serviceID = location.state?.serviceID;
-  if (!serviceID) navigate("/");
+  const [removeReview] = useRemoveReviewMutation();
 
   useEffect(() => {
-    getServiceData({ id: serviceID })
-      .unwrap()
-      .then((data) => {
-        setServiceData(data);
-      })
-      .catch((error) => {
-        dispatch(setSnack(error));
-      });
-
     getReviewByUser({ serviceID: serviceID })
       .unwrap()
       .then((data) => {
@@ -72,23 +50,7 @@ const BookServicePage = () => {
       .catch((error) => {
         dispatch(setSnack(error));
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    getAvailableHours({
-      serviceID: serviceID,
-      date: selectedDay,
-    })
-      .unwrap()
-      .then((data) => {
-        setAvailableHours(data);
-      })
-      .catch((error) => {
-        dispatch(setSnack(error));
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDay]);
 
   const handleRatingChange = (newValue) => {
     setReviewValue(newValue);
@@ -117,6 +79,67 @@ const BookServicePage = () => {
         });
     }
   };
+
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      width="100%">
+      <Rating
+        value={reviewValue}
+        onChange={(_, newValue) => {
+          handleRatingChange(newValue);
+        }}
+        name="ratingInput"
+      />
+    </Box>
+  );
+}
+
+const BookServicePage = () => {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [getServiceData] = useGetServiceByIDMutation();
+
+  const [getAvailableHours] = useGetServiceHoursForDayMutation();
+  const [bookService, { isLoading: bookActionLoading }] =
+    useBookServiceMutation();
+  const [serviceData, setServiceData] = useState();
+  const [selectedDay, setSelectedDay] = useState(moment().format("YYYY-MM-DD"));
+  const [availableHours, setAvailableHours] = useState();
+  const [selectedHour, setSelectedHour] = useState();
+
+  const serviceID = location.state?.serviceID;
+  if (!serviceID) navigate("/");
+
+  useEffect(() => {
+    getServiceData({ id: serviceID })
+      .unwrap()
+      .then((data) => {
+        setServiceData(data);
+      })
+      .catch((error) => {
+        dispatch(setSnack(error));
+      });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    getAvailableHours({
+      serviceID: serviceID,
+      date: selectedDay,
+    })
+      .unwrap()
+      .then((data) => {
+        setAvailableHours(data);
+      })
+      .catch((error) => {
+        dispatch(setSnack(error));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDay]);
 
   const handleBookService = () => {
     bookService({
@@ -255,18 +278,7 @@ const BookServicePage = () => {
                       Address: {serviceData?.address}
                     </Typography>
                   </Box>
-                  <Box
-                    display="flex"
-                    justifyContent="center"
-                    width="100%">
-                    <Rating
-                      value={reviewValue}
-                      onChange={(_, newValue) => {
-                        handleRatingChange(newValue);
-                      }}
-                      name="ratingInput"
-                    />
-                  </Box>
+                  <RatingComponent serviceID={serviceID} />
                 </Box>
               </Box>
             </Paper>
@@ -335,6 +347,7 @@ const BookServicePage = () => {
                   ) : null}
 
                   <LoadingButton
+                    fullWidth
                     loading={bookActionLoading}
                     disabled={!selectedHour}
                     onClick={handleBookService}

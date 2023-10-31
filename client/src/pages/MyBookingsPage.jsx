@@ -40,7 +40,7 @@ const MyBookingsPage = () => {
           flexWrap="wrap"
           justifyContent="center"
           gap={1}>
-          {upcomingBookings &&
+          {upcomingBookings && upcomingBookings.length > 0 ? (
             upcomingBookings.map((booking) => {
               return (
                 <BookingCard
@@ -48,7 +48,10 @@ const MyBookingsPage = () => {
                   booking={booking}
                 />
               );
-            })}
+            })
+          ) : (
+            <>None!</>
+          )}
         </Box>
       </Box>
     </Container>

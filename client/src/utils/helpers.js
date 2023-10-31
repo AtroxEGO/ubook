@@ -28,3 +28,15 @@ export const handleLogin = (data, dispatch) => {
   };
   dispatch(login(loginData));
 };
+
+export const patternTwoDigisAfterComma = /^\d+(\.\d{0,2})?$/;
+const validFileExtensions = {
+  image: ["jpg", "png", "jpeg"],
+};
+
+export const isValidFileType = (fileName, fileType) => {
+  return (
+    fileName &&
+    validFileExtensions[fileType].indexOf(fileName.split(".").pop()) > -1
+  );
+};

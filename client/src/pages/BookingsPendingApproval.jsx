@@ -43,12 +43,20 @@ const BookingsPendingApproval = () => {
         <Box
           display="flex"
           gap={1}>
-          {pendingBookings.map((booking) => (
-            <BookingCard
-              key={booking.id}
-              booking={booking}
-            />
-          ))}
+          {pendingBookings.length > 0 ? (
+            pendingBookings.map((booking) => (
+              <BookingCard
+                key={booking.id}
+                booking={booking}
+              />
+            ))
+          ) : (
+            <Box
+              width="100%"
+              textAlign="center">
+              None!
+            </Box>
+          )}
         </Box>
       </Box>
       <Backdrop
