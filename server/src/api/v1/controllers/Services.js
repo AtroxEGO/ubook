@@ -7,9 +7,15 @@ const {
   QueryServicesByIDs,
 } = require("../services/ServicesTable");
 const { getAvaiableHoursAsTimestamps } = require("../helpers/Booking");
+const { QueryAllSubcategories } = require("../services/SubcategoriesTable");
 
 const GetAllServices = async (req, res) => {
   const result = await QueryAllServices();
+  res.json(result);
+};
+
+const GetAllSubcategories = async (req, res) => {
+  const result = await QueryAllSubcategories();
   res.json(result);
 };
 
@@ -41,6 +47,8 @@ const GetAvailableHours = async (req, res) => {
 
   const service = await QueryServiceById(serviceID);
 
+  if (!service) return res.status(400).json(Error(errorMessages.invalidData));
+
   res.json(await getAvaiableHoursAsTimestamps(service, date));
 };
 
@@ -49,4 +57,5 @@ module.exports = {
   GetServiceById,
   GetServicesByIDs,
   GetAvailableHours,
+  GetAllSubcategories,
 };

@@ -7,8 +7,9 @@ const {
   DeleteService,
 } = require("../services/ServicesTable");
 
-// Create new service
+//  Create a new service.
 const CreateService = async (req, res) => {
+  console.log(req.body);
   req.body = { ...req.body, created_by: req.userData.id };
   const result = await InsertService(req.body);
   if (result.insertID) {

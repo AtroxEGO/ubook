@@ -5,7 +5,10 @@ const {
   GetServiceById,
   GetServicesByIDs,
   GetAvailableHours,
+  GetAllSubcategories,
 } = require("../controllers/Services");
+
+router.get("/getAllSubcategories", GetAllSubcategories);
 
 router.get("/getAll", GetAllServices);
 

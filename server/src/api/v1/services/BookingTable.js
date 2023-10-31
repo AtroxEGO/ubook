@@ -57,7 +57,7 @@ const QueryArchiveBookingsByUserID = async (userID) => {
 const QueryUpcomingBookingsByUserID = async (userID) => {
   // `SELECT * FROM bookings WHERE user_id = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) > NOW();`,
   const [res] = await pool.execute(
-    `SELECT bookings.id, timestamp, accepted, services.name, description, image_url, price, duration, subcategory_name, businesses.name as creator_name, avatar_url, address FROM bookings 
+    `SELECT bookings.id, timestamp, bookings.service_id as serviceID, accepted, services.name, description, image_url, price, duration, subcategory_name, businesses.name as creator_name, avatar_url, address FROM bookings 
     LEFT JOIN services ON bookings.service_id = services.id
     LEFT JOIN subcategories ON services.subcategory = subcategories.id
     LEFT JOIN businesses ON businesses.id = services.created_by
@@ -85,7 +85,14 @@ const QueryArchiveBookingsByOwnerID = async (userID) => {
 
 const QueryUpcomingBookingsByOwnerID = async (userID) => {
   const [res] = await pool.execute(
-    `SELECT * FROM bookings WHERE (SELECT services.created_by FROM services WHERE services.id = service_id) = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) > NOW();`,
+    // `SELECT * FROM bookings WHERE (SELECT services.created_by FROM services WHERE services.id = service_id) = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) > NOW();`,
+    `SELECT bookings.id as event_id, CONCAT(users.first_name," ",users.last_name) as booker_full_name, TIMESTAMP(timestamp) as start, TIMESTAMP(DATE_ADD(timestamp, INTERVAL duration MINUTE)) as end, accepted, services.name as name, subcategory_name
+    FROM bookings
+    LEFT JOIN services ON bookings.service_id = services.id
+    LEFT JOIN subcategories ON services.subcategory = subcategories.id
+    LEFT JOIN businesses ON businesses.id = services.created_by
+    LEFT JOIN users on users.id = bookings.user_id
+    WHERE services.created_by = ? AND timestamp > NOW();`,
     [userID]
   );
   return res;
@@ -148,12 +155,22 @@ const QueryBookingsForGivenTimeFrameByCreatorID = async (
   return res;
 };
 
+const UpdateBookingAccepted = async (creatorID, bookingID) => {
+  const [res] = await pool.execute(
+    `UPDATE bookings SET accepted = 1 WHERE bookings.id = ? AND (SELECT services.created_by FROM services WHERE services.id = service_id) = ? AND DATE_SUB(timestamp, INTERVAL 10 MINUTE) > NOW();`,
+    [bookingID, creatorID]
+  );
+  console.log(res);
+  return res;
+};
+
 module.exports = {
   QueryAllBookingsForDay,
   QueryAllBookingsByServiceID,
   QueryUpcomingBookingsByServiceID,
   QueryAllBookingsByUserID,
   QueryUpcomingBookingsByUserID,
+  UpdateBookingAccepted,
   QueryArchiveBookingsByOwnerID,
   InsertBookingForDay,
   QueryBookingByID,

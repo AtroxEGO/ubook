@@ -6,6 +6,7 @@ const {
   CreateNewBooking,
   GetArchiveBookings,
   GetBookingsForTimeframeByCreatorID,
+  AcceptBookingByID,
 } = require("../controllers/Bookings");
 const CorrectAccountType = require("../middlewares/CorrectAccountTypeMiddleware");
 const router = express.Router();
@@ -31,5 +32,8 @@ router.post("/new", [CorrectAccountType("user")], CreateNewBooking);
 
 // Delete a booking by its ID
 router.post("/delete", RemoveBookingByID);
+
+// Delete a booking by its ID
+router.post("/accept", [CorrectAccountType("business")], AcceptBookingByID);
 
 module.exports = { BookingsRouter: router };

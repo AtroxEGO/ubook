@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const config = require("./config/config");
 const TokenVerifier = require("./api/v1/middlewares/TokenVerifier");
 const { VersionRouter } = require("./api/v1/versionRouter");
+const Error = require("./api/v1/helpers/Error");
+const errorMessages = require("./api/v1/helpers/ErrorMessages");
 const app = express();
 
 // # TODO

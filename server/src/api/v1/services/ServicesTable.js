@@ -46,6 +46,7 @@ const QueryServiceById = async (serviceID) => {
     GROUP BY services.id, services.name, description, image_url, price, duration, gap, serviceHourStart, serviceHourEnd,subcategory_name, category_name, businesses.name, address, avatar_url;`,
     [serviceID]
   );
+
   return service;
 };
 

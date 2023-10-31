@@ -33,17 +33,21 @@ const getAvaiableHoursAsTimestamps = async (service, date) => {
 const generateAvailableHours = (service) => {
   const serviceHoursAvailable = [];
 
-  for (
-    let hour = service.serviceHourStart * 60;
-    hour <= service.serviceHourEnd * 60 - service.duration;
-    hour += service.duration + service.gap
-  ) {
+  const startHour = moment(service.serviceHourStart, "HH:mm");
+  const duration = moment.duration(service.duration, "minutes");
+  const endHour = moment(service.serviceHourEnd, "HH:mm").subtract(duration);
+  let gap = 0;
+
+  while (startHour.add(gap).isBefore(endHour)) {
+    gap = moment.duration(service.gap, "minutes");
+    const startTime = moment(startHour);
+    const endTime = moment(startHour.add(duration));
+
     serviceHoursAvailable.push({
-      startHour: hour / 60,
-      endHour: hour / 60 + service.duration / 60,
+      startHour: startTime.hour() + startTime.minute() / 60,
+      endHour: endTime.hour() + endTime.minute() / 60,
     });
   }
-
   return serviceHoursAvailable;
 };
 

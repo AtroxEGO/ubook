@@ -14,6 +14,7 @@ const {
   QueryArchiveBookingsByUserID,
   QueryArchiveBookingsByOwnerID,
   QueryBookingsForGivenTimeFrameByCreatorID,
+  UpdateBookingAccepted,
 } = require("../services/BookingTable");
 const { QueryServiceById } = require("../services/ServicesTable");
 const { getAvaiableHoursAsTimestamps } = require("../helpers/Booking");
@@ -30,7 +31,7 @@ const GetAllBookings = async (req, res) => {
   res.json(allBookings);
 };
 
-// Get all bookings for user/business
+// Get upcoming bookings for user/business
 const GetUpcomingBookings = async (req, res) => {
   const userID = req.userData.id;
   const accountType = req.userData.account;
@@ -42,7 +43,7 @@ const GetUpcomingBookings = async (req, res) => {
   res.json(upcomingBookings);
 };
 
-// Get all bookings for user/business
+// Get archive bookings for user/business
 const GetArchiveBookings = async (req, res) => {
   const userID = req.userData.id;
   const accountType = req.userData.account;
@@ -54,7 +55,7 @@ const GetArchiveBookings = async (req, res) => {
   res.json(archiveBookings);
 };
 
-// Get all bookings for user/business
+// Remove booking by ID
 const RemoveBookingByID = async (req, res) => {
   const userID = req.userData.id;
   const accountType = req.userData.account;
@@ -70,6 +71,23 @@ const RemoveBookingByID = async (req, res) => {
       .json(Error(errorMessages.notAuthorizedOrDoesntExits));
 
   res.json(Notification("Booking was deleted!"));
+};
+
+// Accept booking proposed by user
+const AcceptBookingByID = async (req, res) => {
+  const userID = req.userData.id;
+  const bookingID = req.body.bookingID;
+  console.log(req.body);
+
+  if (!bookingID) return res.status(400).json(Error(errorMessages.missingData));
+
+  const result = await UpdateBookingAccepted(userID, bookingID);
+  if (result.affectedRows === 0)
+    return res
+      .status(400)
+      .json(Error(errorMessages.notAuthorizedOrDoesntExits));
+
+  res.json(Notification("Booking was accepted!"));
 };
 
 const CreateNewBooking = async (req, res) => {
@@ -121,6 +139,7 @@ module.exports = {
   GetUpcomingBookings,
   GetBookingsForTimeframeByCreatorID,
   RemoveBookingByID,
+  AcceptBookingByID,
   GetArchiveBookings,
   CreateNewBooking,
 };
