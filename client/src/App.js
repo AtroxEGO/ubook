@@ -20,6 +20,9 @@ import OnlyNotAuthedRoute from "./components/OnlyNotAuthedRoute";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import FavoritePage from "./pages/FavoritePage";
 import Page404 from "./pages/Page404";
+import BookingsPendingApproval from "./pages/BookingsPendingApproval";
+import CreateNewService from "./pages/CreateNewService";
+import ManageServicesPage from "./pages/ManageServicesPage";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -54,7 +57,7 @@ function App() {
           <Route
             path="/service"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute accountType="user">
                 <BookServicePage />
               </ProtectedRoute>
             }
@@ -62,7 +65,7 @@ function App() {
           <Route
             path="/myBookings"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute accountType="user">
                 <MyBookingsPage />
               </ProtectedRoute>
             }
@@ -70,8 +73,32 @@ function App() {
           <Route
             path="/favorite"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute accountType="user">
                 <FavoritePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/services"
+            element={
+              <ProtectedRoute accountType="business">
+                <ManageServicesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pending"
+            element={
+              <ProtectedRoute accountType="business">
+                <BookingsPendingApproval />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/createService"
+            element={
+              <ProtectedRoute accountType="business">
+                <CreateNewService />
               </ProtectedRoute>
             }
           />
@@ -105,6 +132,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
+
       <Snackbar
         open={snack.open}
         autoHideDuration={4000}

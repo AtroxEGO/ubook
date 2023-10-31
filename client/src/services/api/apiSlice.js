@@ -217,11 +217,38 @@ export const api = createApi({
         return { ...response.data, type: "error" };
       },
     }),
+    removeBooking: builder.mutation({
+      query: (body) => ({
+        url: "/bookings/delete",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    acceptBooking: builder.mutation({
+      query: (body) => ({
+        url: "/bookings/accept",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    getAllSubcategories: builder.query({
+      query: () => "services/getAllSubcategories",
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
   }),
 });
 
 export const {
   useCreateBusinessMutation,
+  useGetAllSubcategoriesQuery,
   useCreateUserMutation,
   useGetAllServicesQuery,
   useGetServiceHoursForDayMutation,
@@ -242,4 +269,6 @@ export const {
   useGetReviewByUserMutation,
   useAddReviewMutation,
   useRemoveReviewMutation,
+  useRemoveBookingMutation,
+  useAcceptBookingMutation,
 } = api;

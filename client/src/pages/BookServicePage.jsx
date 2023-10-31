@@ -49,25 +49,12 @@ const BookServicePage = () => {
   const [selectedDay, setSelectedDay] = useState(moment().format("YYYY-MM-DD"));
   const [availableHours, setAvailableHours] = useState();
   const [selectedHour, setSelectedHour] = useState();
-  console.log(serviceData);
-  useEffect(() => {
-    getAvailableHours({
-      serviceID: location.state.serviceID,
-      date: selectedDay,
-    })
-      .unwrap()
-      .then((data) => {
-        console.log(data);
-        setAvailableHours(data);
-      })
-      .catch((error) => {
-        dispatch(setSnack(error));
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDay]);
+
+  const serviceID = location.state?.serviceID;
+  if (!serviceID) navigate("/");
 
   useEffect(() => {
-    getServiceData({ id: location.state.serviceID })
+    getServiceData({ id: serviceID })
       .unwrap()
       .then((data) => {
         setServiceData(data);
@@ -76,7 +63,7 @@ const BookServicePage = () => {
         dispatch(setSnack(error));
       });
 
-    getReviewByUser({ serviceID: location.state.serviceID })
+    getReviewByUser({ serviceID: serviceID })
       .unwrap()
       .then((data) => {
         console.log(data.review);
@@ -88,11 +75,26 @@ const BookServicePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    getAvailableHours({
+      serviceID: serviceID,
+      date: selectedDay,
+    })
+      .unwrap()
+      .then((data) => {
+        setAvailableHours(data);
+      })
+      .catch((error) => {
+        dispatch(setSnack(error));
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDay]);
+
   const handleRatingChange = (newValue) => {
     setReviewValue(newValue);
     if (newValue === null) {
       removeReview({
-        serviceID: location.state.serviceID,
+        serviceID: serviceID,
       })
         .unwrap()
         .then((data) => {
@@ -103,7 +105,7 @@ const BookServicePage = () => {
         });
     } else {
       addReview({
-        serviceID: location.state.serviceID,
+        serviceID: serviceID,
         review: newValue,
       })
         .unwrap()
@@ -114,7 +116,6 @@ const BookServicePage = () => {
           dispatch(setSnack(error));
         });
     }
-    console.log(newValue);
   };
 
   const handleBookService = () => {
@@ -337,7 +338,6 @@ const BookServicePage = () => {
                     loading={bookActionLoading}
                     disabled={!selectedHour}
                     onClick={handleBookService}
-                    fullWidth
                     variant="contained">
                     book
                   </LoadingButton>

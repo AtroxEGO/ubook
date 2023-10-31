@@ -4,6 +4,7 @@ import { useGetUpcomingBookingsMutation } from "../services/api/apiSlice";
 import BookingCard from "../components/BookingCard";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
+import { Navbar } from "../components/Navbar";
 
 const MyBookingsPage = () => {
   const [upcomingBookings, setUpcomingBookings] = useState();
@@ -33,20 +34,7 @@ const MyBookingsPage = () => {
       component="main"
       maxWidth="lg">
       <Box mt={8}>
-        <Box
-          display="flex"
-          alignItems="center">
-          <IconButton onClick={() => navigate(-1)}>
-            <Tooltip title="Back">
-              <ArrowBackIcon fontSize="large" />
-            </Tooltip>
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h5">
-            Bookings
-          </Typography>
-        </Box>
+        <Navbar title="Bookings" />
         <Box
           display="flex"
           flexWrap="wrap"

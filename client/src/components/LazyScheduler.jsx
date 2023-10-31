@@ -3,6 +3,7 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import { useGetBookingsForTimeframeMutation } from "../services/api/apiSlice";
 import { useDispatch } from "react-redux";
 import { setSnack } from "../services/store/features/snackSlice";
+import { Box, Typography } from "@mui/material";
 
 const LazyScheduler = () => {
   const [events, setEvents] = useState([]);
@@ -39,7 +40,6 @@ const LazyScheduler = () => {
         name: "description",
       }}
       viewerExtraComponent={(fields, event) => {
-        console.log(event);
         return (
           <div>
             <p>Booker: {event.booker_full_name || "Nothing..."}</p>
@@ -56,6 +56,7 @@ const LazyScheduler = () => {
                 ...event,
                 start: new Date(event.start),
                 end: new Date(event.end),
+                disabled: event.accepted === 0,
                 deletable: false,
               };
             });
