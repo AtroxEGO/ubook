@@ -1,15 +1,12 @@
-import { Box, Container, IconButton, Tooltip, Typography } from "@mui/material";
+import { Box, Container, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useGetUpcomingBookingsMutation } from "../services/api/apiSlice";
 import BookingCard from "../components/BookingCard";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 
 const MyBookingsPage = () => {
   const [upcomingBookings, setUpcomingBookings] = useState();
-  const [getUpcomingBookings] = useGetUpcomingBookingsMutation();
-  const navigate = useNavigate();
+  const [getUpcomingBookings, { isLoading }] = useGetUpcomingBookingsMutation();
 
   useEffect(() => {
     getUpcomingBookings()
@@ -27,6 +24,7 @@ const MyBookingsPage = () => {
       .catch((error) => {
         console.log(error);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -40,17 +38,23 @@ const MyBookingsPage = () => {
           flexWrap="wrap"
           justifyContent="center"
           gap={1}>
-          {upcomingBookings && upcomingBookings.length > 0 ? (
-            upcomingBookings.map((booking) => {
-              return (
-                <BookingCard
-                  key={booking.id}
-                  booking={booking}
-                />
-              );
-            })
+          {isLoading ? (
+            <CircularProgress />
           ) : (
-            <>None!</>
+            <>
+              {upcomingBookings && upcomingBookings.length > 0 ? (
+                upcomingBookings.map((booking) => {
+                  return (
+                    <BookingCard
+                      key={booking.id}
+                      booking={booking}
+                    />
+                  );
+                })
+              ) : (
+                <>None!</>
+              )}
+            </>
           )}
         </Box>
       </Box>

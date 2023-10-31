@@ -1,13 +1,7 @@
-import {
-  Backdrop,
-  Box,
-  CircularProgress,
-  Container,
-  Typography,
-} from "@mui/material";
+import { Backdrop, Box, CircularProgress, Container } from "@mui/material";
 import React, { useEffect } from "react";
 import { Navbar } from "../components/Navbar";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useGetUpcomingBookingsMutation } from "../services/api/apiSlice";
 import { setSnack } from "../services/store/features/snackSlice";
 import BookingCard from "../components/BookingCard";

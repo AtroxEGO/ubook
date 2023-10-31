@@ -10,11 +10,9 @@ import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import StarBorderRoundedIcon from "@mui/icons-material/StarBorderRounded";
 import {
   Avatar,
-  Box,
   CardActions,
   CardContent,
   CardHeader,
-  Icon,
   IconButton,
   List,
   ListItem,
@@ -32,7 +30,7 @@ import { setFavorites } from "../services/store/features/favoritesSlice";
 import { setSnack } from "../services/store/features/snackSlice";
 import { useNavigate } from "react-router-dom";
 
-export default function ServiceCard({ service }) {
+export const ServiceCard = ({ service }) => {
   const dispatch = useDispatch();
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
@@ -67,6 +65,7 @@ export default function ServiceCard({ service }) {
     <Card
       variant="outlined"
       sx={{
+        maxHeight: "24em",
         minWidth: "20em",
         marginInline: "0.5em",
         marginBlock: "0.5em",
@@ -89,20 +88,10 @@ export default function ServiceCard({ service }) {
       />
       <CardContent
         sx={{
+          maxHeight: "6em",
+          overflow: "auto",
           paddingBlock: "0",
         }}>
-        {/* <Box display="flex">
-          <Box
-            display="flex"
-            gap={0.5}>
-            <Tooltip
-              title="Duration"
-              sx={{ display: "flex", width: "20em" }}>
-              <AccessTimeRoundedIcon color="primary" />
-              <Typography>{service.duration}</Typography>
-            </Tooltip>
-          </Box>
-        </Box> */}
         <List>
           <ListItem disablePadding>
             <ListItemIcon sx={{ minWidth: "26px", mr: 0.5 }}>
@@ -171,4 +160,6 @@ export default function ServiceCard({ service }) {
       </CardActions>
     </Card>
   );
-}
+};
+
+export default ServiceCard;

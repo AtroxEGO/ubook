@@ -18,8 +18,6 @@ import { useDispatch } from "react-redux";
 import {
   useCreateBusinessMutation,
   useCreateUserMutation,
-  useLoginBusinessMutation,
-  useLoginUserMutation,
 } from "../services/api/apiSlice";
 import { BottomFormInputs } from "./BottomRegisterFormInputs";
 import { UserFormInputs } from "./UserRegisterFormInputs";

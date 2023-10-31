@@ -3,7 +3,6 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import { useGetBookingsForTimeframeMutation } from "../services/api/apiSlice";
 import { useDispatch } from "react-redux";
 import { setSnack } from "../services/store/features/snackSlice";
-import { Box, Typography } from "@mui/material";
 
 const LazyScheduler = () => {
   const [events, setEvents] = useState([]);
@@ -60,7 +59,6 @@ const LazyScheduler = () => {
                 deletable: false,
               };
             });
-            console.log(modifiedData);
             setEvents(modifiedData);
           })
           .catch((error) => {

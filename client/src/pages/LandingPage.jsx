@@ -1,4 +1,4 @@
-import { Backdrop, Box, CircularProgress, Container, Tab } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Container } from "@mui/material";
 import React, { Suspense, lazy, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -32,6 +32,7 @@ const LandingPage = () => {
           dispatch(setSnack(error));
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [searchTerm, setSearchTerm] = useState("");

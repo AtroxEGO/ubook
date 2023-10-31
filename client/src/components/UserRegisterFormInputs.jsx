@@ -1,10 +1,4 @@
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  FormHelperText,
-  TextField,
-} from "@mui/material";
+import { Box, Checkbox, FormControlLabel, TextField } from "@mui/material";
 
 export const UserFormInputs = ({ userFormik }) => {
   return (

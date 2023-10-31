@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Input,
-  InputAdornment,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, InputAdornment, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { LoadingButton } from "@mui/lab";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -82,9 +74,9 @@ const ServiceForm = (initialValues) => {
         <Autocomplete
           id="subcategory"
           name="subcategory"
-          loading={isLoading}
+          loading={subcategoriesLoading}
           value={form.values.subcategory}
-          onChange={(event, newValue) =>
+          onChange={(_, newValue) =>
             form.setFieldValue("subcategory", newValue?.id)
           }
           onBlur={form.handleBlur}
