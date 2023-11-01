@@ -2,9 +2,6 @@ import * as React from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import image from "../assets/placeholder.png";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import AttachMoneyRoundedIcon from "@mui/icons-material/AttachMoneyRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import StarBorderRoundedIcon from "@mui/icons-material/StarBorderRounded";
@@ -13,7 +10,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  IconButton,
+  Box,
   List,
   ListItem,
   ListItemIcon,
@@ -21,51 +18,15 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {
-  useAddFavoriteMutation,
-  useRemoveFavoriteMutation,
-} from "../services/api/apiSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { setFavorites } from "../services/store/features/favoritesSlice";
-import { setSnack } from "../services/store/features/snackSlice";
-import { useNavigate } from "react-router-dom";
+import { ServiceCardActions } from "./ui/ServiceCardActions";
 
 export const ServiceCard = ({ service }) => {
-  const dispatch = useDispatch();
-  const [addFavorite] = useAddFavoriteMutation();
-  const [removeFavorite] = useRemoveFavoriteMutation();
-  const navigate = useNavigate();
-  const favorites = useSelector((state) => state.favoriteReducer.favorites);
-  const handleFavoriteClick = (serviceID) => {
-    if (favorites.includes(serviceID)) {
-      removeFavorite({ serviceID: serviceID })
-        .unwrap()
-        .then((data) => {
-          dispatch(setFavorites(data.favorites.map((item) => item.serviceID)));
-          dispatch(setSnack(data));
-        })
-        .catch((error) => {
-          dispatch(setSnack(error));
-        });
-    } else {
-      addFavorite({ serviceID: serviceID })
-        .unwrap()
-        .then((data) => {
-          dispatch(setSnack(data));
-          dispatch(setFavorites(data.favorites.map((item) => item.serviceID)));
-        })
-        .catch((error) => {
-          console.log(error);
-          dispatch(setSnack(error));
-        });
-    }
-  };
-
   return (
     <Card
       variant="outlined"
       sx={{
         maxHeight: "24em",
+        height: "100%",
         minWidth: "20em",
         marginInline: "0.5em",
         marginBlock: "0.5em",
@@ -73,7 +34,7 @@ export const ServiceCard = ({ service }) => {
       <CardMedia
         component="img"
         height="170"
-        image={image}
+        image={service.image_url ? service.image_url : image}
         alt="service image"
       />
       <CardHeader
@@ -88,6 +49,7 @@ export const ServiceCard = ({ service }) => {
       />
       <CardContent
         sx={{
+          height: "100%",
           maxHeight: "6em",
           overflow: "auto",
           paddingBlock: "0",
@@ -112,7 +74,7 @@ export const ServiceCard = ({ service }) => {
               </Tooltip>
             </ListItemIcon>
             <ListItemText>
-              <Typography
+              <Box
                 display="flex"
                 gap="0.3em"
                 alignItems="center">
@@ -122,41 +84,18 @@ export const ServiceCard = ({ service }) => {
                   color="text.secondary">
                   ({service.reviewCount})
                 </Typography>
-              </Typography>
+              </Box>
             </ListItemText>
           </ListItem>
         </List>
         <Typography
           variant="body2"
           style={{ display: "inline-block", whiteSpace: "pre-line" }}>
-          {service.description + service.description}
+          {service.description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <Tooltip title="Favorite">
-          <IconButton
-            aria-label="add to favorites"
-            onClick={() => {
-              handleFavoriteClick(service.serviceID);
-            }}
-            name="favoriteButton">
-            {favorites.includes(service.serviceID) ? (
-              <FavoriteIcon color="primary" />
-            ) : (
-              <FavoriteBorderRoundedIcon color="primary" />
-            )}
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Check">
-          <IconButton
-            aria-label="check the service"
-            sx={{ marginLeft: "auto" }}
-            onClick={() => {
-              navigate("/service", { state: { serviceID: service.serviceID } });
-            }}>
-            <ArrowForwardIosRoundedIcon color="primary" />
-          </IconButton>
-        </Tooltip>
+        <ServiceCardActions serviceID={service.serviceID} />
       </CardActions>
     </Card>
   );

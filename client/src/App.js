@@ -21,8 +21,9 @@ import MyBookingsPage from "./pages/MyBookingsPage";
 import FavoritePage from "./pages/FavoritePage";
 import Page404 from "./pages/Page404";
 import BookingsPendingApproval from "./pages/BookingsPendingApproval";
-import CreateNewService from "./pages/CreateNewService";
+import CreateServicePage from "./pages/CreateServicePage";
 import ManageServicesPage from "./pages/ManageServicesPage";
+import UpdateServicePage from "./pages/UpdateServicePage";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -98,7 +99,15 @@ function App() {
             path="/createService"
             element={
               <ProtectedRoute accountType="business">
-                <CreateNewService />
+                <CreateServicePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/updateService"
+            element={
+              <ProtectedRoute accountType="business">
+                <UpdateServicePage />
               </ProtectedRoute>
             }
           />

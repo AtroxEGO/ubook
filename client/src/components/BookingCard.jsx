@@ -9,6 +9,7 @@ import {
   IconButton,
   Tooltip,
   Typography,
+  capitalize,
 } from "@mui/material";
 import React from "react";
 import image from "../assets/placeholder.png";
@@ -151,7 +152,9 @@ const BookingCard = ({ booking }) => {
                 alignItems="center"
                 gap={0.5}>
                 <HourglassTopIcon />
-                <Typography>Time: {getTimeBetweenNowAndBooking()}</Typography>
+                <Typography>
+                  Time: {moment(booking.timestamp).fromNow()}
+                </Typography>
               </Box>
             </Box>
           </CardContent>
@@ -183,7 +186,9 @@ const BookingCard = ({ booking }) => {
               display="flex"
               gap={1}>
               <HourglassTopIcon />
-              <Typography>{getTimeBetweenNowAndBooking()}</Typography>
+              <Typography>
+                {capitalize(moment(booking.start).fromNow())}
+              </Typography>
             </Box>
           </CardContent>
         </>

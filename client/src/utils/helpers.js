@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { login } from "../services/store/features/account/accountSlice";
+import { login } from "../services/store/features/accountSlice";
 
 export const stringToColor = (string) => {
   let hash = 0;

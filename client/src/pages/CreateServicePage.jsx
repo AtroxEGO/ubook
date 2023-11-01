@@ -3,7 +3,7 @@ import React from "react";
 import { Navbar } from "../components/Navbar";
 import ServiceForm from "../components/ServiceForm";
 
-const CreateNewService = () => {
+const CreateServicePage = () => {
   return (
     <Container
       component="main"
@@ -13,11 +13,11 @@ const CreateNewService = () => {
         display="flex"
         flexDirection="column"
         alignItems="center">
-        <Navbar title={"Create New Service"} />
+        <Navbar title="Create Service" />
         <ServiceForm />
       </Box>
     </Container>
   );
 };
 
-export default CreateNewService;
+export default CreateServicePage;

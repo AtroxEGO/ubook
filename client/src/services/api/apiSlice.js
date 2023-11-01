@@ -253,6 +253,36 @@ export const api = createApi({
         return { ...response.data, type: "error" };
       },
     }),
+    getAllServicesByBusiness: builder.mutation({
+      query: (body) => ({
+        url: "/services/getByOwner",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    deleteService: builder.mutation({
+      query: (body) => ({
+        url: "/manage/deleteService",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
+    updateService: builder.mutation({
+      query: (body) => ({
+        url: "/manage/updateService",
+        method: "POST",
+        body,
+      }),
+      transformErrorResponse: (response, meta, arg) => {
+        return { ...response.data, type: "error" };
+      },
+    }),
   }),
 });
 
@@ -282,4 +312,7 @@ export const {
   useRemoveBookingMutation,
   useAcceptBookingMutation,
   useCreateServiceMutation,
+  useGetAllServicesByBusinessMutation,
+  useDeleteServiceMutation,
+  useUpdateServiceMutation,
 } = api;

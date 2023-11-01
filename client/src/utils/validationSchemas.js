@@ -106,20 +106,17 @@ export const serviceCreationSchema = yup.object().shape({
     .min(10, wrongDescLength)
     .max(500, wrongDescLength)
     .required("Please enter description of the service!"),
-  subcategory: yup
-    .number()
-    .positive("Subcategory id musts be positive!")
-    .required("Please select subcategory!"),
+  subcategory: yup.mixed().required("Please select subcategory!"),
   image: yup
     .mixed()
     .required("Required")
     .test("is-valid-type", "Not a valid image type", (value) =>
-      isValidFileType(value && value.name.toLowerCase(), "image")
+      isValidFileType(value && value?.name?.toLowerCase(), "image")
     )
     .test(
       "is-valid-size",
       "Max allowed size is 1Mb",
-      (value) => value && value.size <= 1024000
+      (value) => value && value?.size <= 1024000
     )
     .required("Please select image for the service!"),
   price: yup

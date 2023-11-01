@@ -12,7 +12,7 @@ import { LoadingButton } from "@mui/lab";
 import { useFormik } from "formik";
 import { verifyFormSchema } from "../utils/validationSchemas";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../services/store/features/account/accountSlice";
+import { logout } from "../services/store/features/accountSlice";
 import { useNavigate } from "react-router-dom";
 import {
   api,

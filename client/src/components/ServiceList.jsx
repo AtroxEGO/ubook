@@ -3,7 +3,6 @@ import React, { useMemo } from "react";
 import ServiceCard from "./ServiceCard";
 
 export const ServiceList = ({ allServices, searchTerm }) => {
-  console.log("test");
   const uniqueCategories = new Set();
 
   allServices?.forEach((item) => {

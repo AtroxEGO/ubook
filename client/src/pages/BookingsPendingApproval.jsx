@@ -1,5 +1,5 @@
 import { Backdrop, Box, CircularProgress, Container } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Navbar } from "../components/Navbar";
 import { useDispatch } from "react-redux";
 import { useGetUpcomingBookingsMutation } from "../services/api/apiSlice";
@@ -11,11 +11,12 @@ const BookingsPendingApproval = () => {
   const [pendingBookings, setPendingBookings] = React.useState([]);
   const dispatch = useDispatch();
 
+  // const onAccept = useCallback()
+
   useEffect(() => {
     getBookings()
       .unwrap()
       .then((bookings) => {
-        console.log(bookings);
         const pendingBookings = bookings.filter(
           (booking) => booking.accepted === 0
         );

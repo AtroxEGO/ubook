@@ -6,43 +6,81 @@ import Autocomplete from "@mui/material/Autocomplete";
 import {
   useCreateServiceMutation,
   useGetAllSubcategoriesQuery,
+  useUpdateServiceMutation,
 } from "../services/api/apiSlice";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { TimePicker } from "@mui/x-date-pickers";
 import { MuiFileInput } from "mui-file-input";
-import moment from "moment";
+import moment, { relativeTimeRounding } from "moment";
 import { serviceCreationSchema } from "../utils/validationSchemas";
+import { useDispatch } from "react-redux";
+import { setSnack } from "../services/store/features/snackSlice";
+import { useNavigate } from "react-router-dom";
 
-const ServiceForm = (initialValues) => {
-  const [createService, { isLoading }] = useCreateServiceMutation();
+const ServiceForm = ({ serviceData }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [createService, { isLoading: isCreateServiceLoading }] =
+    useCreateServiceMutation();
+  const [updateService, { isLoading: isUpdateServiceLoading }] =
+    useUpdateServiceMutation();
+  const isLoading = isCreateServiceLoading || isUpdateServiceLoading;
   const { data, isLoading: subcategoriesLoading } =
     useGetAllSubcategoriesQuery();
 
   const form = useFormik({
     initialValues: {
-      name: "Test123123123",
-      description: "Test123123123123",
-      subcategory: "1",
+      name: serviceData?.name || "",
+      description: serviceData?.description || "",
+      subcategory: null,
       image: null,
-      price: "12.99",
-      duration: "31",
-      gap: "11",
-      serviceHourStart: "11:13",
-      serviceHourEnd: "12:12",
+      price: serviceData?.price || "",
+      duration: serviceData?.duration || "",
+      gap: serviceData?.gap || "",
+      serviceHourStart: "",
+      serviceHourEnd: "",
     },
     validationSchema: serviceCreationSchema,
     onSubmit: (values) => {
-      console.log(values);
-      createService(values)
-        .unwrap()
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result;
+        values.image = result;
+        values.subcategory = values.subcategory.id;
+
+        if (serviceData) {
+          values.id = serviceData.serviceID;
+          updateService(values)
+            .unwrap()
+            .then((data) => {
+              dispatch(setSnack(data.response));
+              navigate("/services");
+            })
+            .catch((error) => {
+              dispatch(setSnack(error));
+            });
+        } else {
+          createService(values)
+            .unwrap()
+            .then((data) => {
+              dispatch(setSnack(data.response));
+              navigate("/services");
+            })
+            .catch((error) => {
+              console.log(error);
+              dispatch(setSnack(error));
+            });
+        }
+      };
+      reader.onerror = () => {
+        dispatch(
+          setSnack({ message: "Error while uploading image", type: "error" })
+        );
+      };
+
+      reader.readAsDataURL(values.image);
     },
   });
 
@@ -76,13 +114,13 @@ const ServiceForm = (initialValues) => {
           name="subcategory"
           loading={subcategoriesLoading}
           value={form.values.subcategory}
-          onChange={(_, newValue) =>
-            form.setFieldValue("subcategory", newValue?.id)
-          }
+          onChange={(_, newValue) => {
+            form.setFieldValue("subcategory", newValue);
+          }}
           onBlur={form.handleBlur}
-          options={data?.map((elem) => elem.id) || []}
-          groupBy={(option) => data?.[option]?.category_name}
-          getOptionLabel={(option) => data?.[option]?.subcategory_name}
+          options={data || []}
+          groupBy={(option) => option.category_name}
+          getOptionLabel={(option) => option.subcategory_name}
           sx={{ width: 400 }}
           renderInput={(params) => (
             <TextField
@@ -200,9 +238,9 @@ const ServiceForm = (initialValues) => {
           sx={{ width: "50%" }}
           label="End Hour"
           value={moment(form.values.serviceHourEnd)}
-          onChange={(value) =>
-            form.setFieldValue("serviceHourEnd", value.format("HH:mm"))
-          }
+          onChange={(value) => {
+            form.setFieldValue("serviceHourEnd", value.format("HH:mm"));
+          }}
           onBlur={form.handleBlur}
           error={
             form.touched.serviceHourEnd && Boolean(form.errors.serviceHourEnd)
@@ -215,16 +253,19 @@ const ServiceForm = (initialValues) => {
         name="image"
         inputProps={{ accept: ".png, .jpeg" }}
         value={form.values.image}
-        onChange={(value) => form.setFieldValue("image", value)}
+        onChange={(newFile) => {
+          form.setFieldValue("image", newFile);
+        }}
         onBlur={form.handleBlur}
         error={form.touched.image && Boolean(form.errors.image)}
         helperText={form.touched.image && form.errors.image}
       />
       <LoadingButton
         type="submit"
+        onClick={() => console.log(form.values)}
         loading={isLoading}
         variant="contained">
-        submit
+        {serviceData ? "update" : "submit"}
       </LoadingButton>
     </Box>
   );

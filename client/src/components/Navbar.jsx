@@ -17,7 +17,7 @@ import FolderIcon from "@mui/icons-material/Folder";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import HomeIcon from "@mui/icons-material/Home";
 import AddIcon from "@mui/icons-material/Add";
-import { logout } from "../services/store/features/account/accountSlice";
+import { logout } from "../services/store/features/accountSlice";
 import { Favorite } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";

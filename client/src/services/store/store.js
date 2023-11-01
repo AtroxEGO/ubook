@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import accountReducer from "./features/account/accountSlice";
+import accountReducer from "./features/accountSlice";
 import snackReducer from "./features/snackSlice";
 import favoriteReducer from "./features/favoritesSlice";
 import { api } from "../api/apiSlice";
