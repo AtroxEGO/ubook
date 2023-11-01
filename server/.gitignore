@@ -1,4 +1,6 @@
 .env
 ubook.json
 node_modules
-backup.sql
+DatabaseStruct.sql
+DatabaseStructAndData.sql
+firebaseAdminKey.json

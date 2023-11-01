@@ -5,6 +5,7 @@ const {
   QueryAllServices,
   QueryServiceById,
   QueryServicesByIDs,
+  QueryServicesOwnedByBusiness,
 } = require("../services/ServicesTable");
 const { getAvaiableHoursAsTimestamps } = require("../helpers/Booking");
 const { QueryAllSubcategories } = require("../services/SubcategoriesTable");
@@ -14,6 +15,13 @@ const GetAllServices = async (req, res) => {
   res.json(result);
 };
 
+const GetServicesOwnedByBusiness = async (req, res) => {
+  const businessID = req.userData.id;
+
+  const result = await QueryServicesOwnedByBusiness(businessID);
+
+  res.json(result);
+};
 const GetAllSubcategories = async (req, res) => {
   const result = await QueryAllSubcategories();
   res.json(result);
@@ -58,4 +66,5 @@ module.exports = {
   GetServicesByIDs,
   GetAvailableHours,
   GetAllSubcategories,
+  GetServicesOwnedByBusiness,
 };

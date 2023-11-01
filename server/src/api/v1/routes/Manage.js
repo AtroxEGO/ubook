@@ -11,6 +11,7 @@ const {
   serviceUpdateSchema,
 } = require("../validations/ServiceValidation");
 const BusinessOwnsService = require("../middlewares/BusinessOwnsServiceMiddleware");
+const fileUpload = require("express-fileupload");
 
 // Create new service
 router.post(

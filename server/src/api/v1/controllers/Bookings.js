@@ -77,7 +77,6 @@ const RemoveBookingByID = async (req, res) => {
 const AcceptBookingByID = async (req, res) => {
   const userID = req.userData.id;
   const bookingID = req.body.bookingID;
-  console.log(req.body);
 
   if (!bookingID) return res.status(400).json(Error(errorMessages.missingData));
 
