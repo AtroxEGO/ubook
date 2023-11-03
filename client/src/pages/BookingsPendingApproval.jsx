@@ -1,5 +1,5 @@
 import { Backdrop, Box, CircularProgress, Container } from "@mui/material";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Navbar } from "../components/Navbar";
 import { useDispatch } from "react-redux";
 import { useGetUpcomingBookingsMutation } from "../services/api/apiSlice";
@@ -27,6 +27,7 @@ const BookingsPendingApproval = () => {
         console.log(error);
         dispatch(setSnack(error));
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -37,12 +38,14 @@ const BookingsPendingApproval = () => {
         <Navbar title={"Pending"} />
         <Box
           display="flex"
+          flexWrap="wrap"
           gap={1}>
           {pendingBookings.length > 0 ? (
             pendingBookings.map((booking) => (
               <BookingCard
                 key={booking.id}
                 booking={booking}
+                setPendingBookings={setPendingBookings}
               />
             ))
           ) : (

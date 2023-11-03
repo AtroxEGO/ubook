@@ -111,17 +111,23 @@ export function Navbar(props) {
             <Box
               display="flex"
               alignItems="center">
-              <IconButton onClick={() => navigate("/")}>
+              <IconButton
+                onClick={() => navigate("/")}
+                aria-label="Home page navigation button">
                 <Tooltip title="Home">
                   <HomeIcon fontSize="large" />
                 </Tooltip>
               </IconButton>
-              <IconButton onClick={() => navigate("/favorite")}>
+              <IconButton
+                onClick={() => navigate("/favorite")}
+                aria-label="Favorites page navigation button">
                 <Tooltip title="Favorite">
                   <Favorite fontSize="large" />
                 </Tooltip>
               </IconButton>
-              <IconButton onClick={() => navigate("/myBookings")}>
+              <IconButton
+                onClick={() => navigate("/myBookings")}
+                aria-label="Bookings page navigation button">
                 <Tooltip title="Bookings">
                   <CalendarMonthIcon fontSize="large" />
                 </Tooltip>
@@ -149,22 +155,30 @@ export function Navbar(props) {
             <Box
               display="flex"
               alignItems="center">
-              <IconButton onClick={() => navigate("/")}>
+              <IconButton
+                onClick={() => navigate("/")}
+                aria-label="Home page navigation button">
                 <Tooltip title="Home">
                   <HomeIcon fontSize="large" />
                 </Tooltip>
               </IconButton>
-              <IconButton onClick={() => navigate("/createService")}>
+              <IconButton
+                onClick={() => navigate("/createService")}
+                aria-label="Create service page navigation button">
                 <Tooltip title="Create Serivce">
                   <AddIcon fontSize="large" />
                 </Tooltip>
               </IconButton>
-              <IconButton onClick={() => navigate("/services")}>
+              <IconButton
+                onClick={() => navigate("/services")}
+                aria-label="Owned services page navigation button">
                 <Tooltip title="Manage Services">
                   <FolderIcon fontSize="large" />
                 </Tooltip>
               </IconButton>
-              <IconButton onClick={() => navigate("/pending")}>
+              <IconButton
+                onClick={() => navigate("/pending")}
+                aria-label="Pending bookings page page navigation button">
                 <Tooltip title="Pending Approval">
                   <PendingActionsIcon fontSize="large" />
                 </Tooltip>

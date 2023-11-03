@@ -6,41 +6,27 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
-  IconButton,
   Tooltip,
   Typography,
   capitalize,
 } from "@mui/material";
 import React from "react";
-import image from "../assets/placeholder.png";
 import moment from "moment";
 import InfoIcon from "@mui/icons-material/Info";
 import PlaceIcon from "@mui/icons-material/Place";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PersonIcon from "@mui/icons-material/Person";
-import ClearIcon from "@mui/icons-material/Clear";
-import DoneIcon from "@mui/icons-material/Done";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  useAcceptBookingMutation,
-  useRemoveBookingMutation,
-} from "../services/api/apiSlice";
-import { setSnack } from "../services/store/features/snackSlice";
+import { useSelector } from "react-redux";
+import { AcceptBookingButton } from "./ui/AcceptBookingButton";
+import { RejectBookingButton } from "./ui/RejectBookingButton";
 
-const BookingCard = ({ booking }) => {
-  const dispatch = useDispatch();
-  const [acceptBooking, { isLoading }] = useAcceptBookingMutation();
-  const [rejectBooking, { isLoading: isRejecting }] =
-    useRemoveBookingMutation();
-
+const BookingCard = ({ booking, setPendingBookings }) => {
   const navigate = useNavigate();
   const accountType = useSelector(
     (state) => state.accountReducer.accountData.account
   );
-
   const getBookingStatus = () => {
     if (booking.accepted === 0) {
       return <span style={{ color: "yellow" }}>Pending Approval</span>;
@@ -50,58 +36,6 @@ const BookingCard = ({ booking }) => {
     }
 
     return <span style={{ color: "#00c41d" }}>Accepted</span>;
-  };
-
-  const getTimeBetweenNowAndBooking = () => {
-    const currentTime = moment();
-    const startTime = moment(booking.timestamp || booking.start);
-
-    const duration = moment.duration(currentTime.diff(startTime));
-
-    const weeks = duration.asWeeks();
-    const days = duration.asDays();
-    const hours = duration.asHours();
-    const minutes = duration.asMinutes();
-    const seconds = duration.asSeconds();
-
-    let formattedTimeDifference = "";
-
-    if (weeks >= 1) {
-      formattedTimeDifference = moment.duration(weeks, "weeks").humanize();
-    } else if (days >= 1) {
-      formattedTimeDifference = moment.duration(days, "days").humanize();
-    } else if (hours >= 1) {
-      formattedTimeDifference = moment.duration(hours, "hours").humanize();
-    } else if (minutes >= 1) {
-      formattedTimeDifference = moment.duration(minutes, "minutes").humanize();
-    } else {
-      formattedTimeDifference = moment.duration(seconds, "seconds").humanize();
-    }
-
-    const ending = startTime.isBefore(moment()) ? " ago." : " left.";
-
-    return formattedTimeDifference + ending;
-  };
-
-  const handleAccept = () => {
-    acceptBooking({ bookingID: booking.event_id })
-      .unwrap()
-      .then((data) => {
-        dispatch(setSnack(data));
-      })
-      .catch((error) => {
-        dispatch(setSnack(error));
-      });
-  };
-  const handleReject = () => {
-    rejectBooking({ bookingID: booking.event_id })
-      .unwrap()
-      .then((data) => {
-        dispatch(setSnack(data));
-      })
-      .catch((error) => {
-        dispatch(setSnack(error));
-      });
   };
 
   return (
@@ -116,7 +50,7 @@ const BookingCard = ({ booking }) => {
       <CardMedia
         component="img"
         height="170"
-        image={image}
+        image={booking.image_url}
         alt="booking image"
       />
       {accountType === "user" ? (
@@ -197,20 +131,14 @@ const BookingCard = ({ booking }) => {
         <CardActions
           disableSpacing
           sx={{ display: "flex", justifyContent: "space-between" }}>
-          <IconButton
-            onClick={handleReject}
-            disabled={isRejecting}>
-            <Tooltip title="Reject">
-              {isRejecting ? <CircularProgress /> : <ClearIcon />}
-            </Tooltip>
-          </IconButton>
-          <IconButton
-            onClick={handleAccept}
-            disabled={isLoading}>
-            <Tooltip title="Accept">
-              {isLoading ? <CircularProgress /> : <DoneIcon />}
-            </Tooltip>
-          </IconButton>
+          <RejectBookingButton
+            bookingID={booking.event_id}
+            setPendingBookings={setPendingBookings}
+          />
+          <AcceptBookingButton
+            bookingID={booking.event_id}
+            setPendingBookings={setPendingBookings}
+          />
         </CardActions>
       ) : null}
     </Card>

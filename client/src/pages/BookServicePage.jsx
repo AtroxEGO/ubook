@@ -100,10 +100,7 @@ const BookServicePage = () => {
                     // borderRadius: "inherit",
                   }}
                   alt="Service image"
-                  src={
-                    serviceData?.image_url ||
-                    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2"
-                  }
+                  src={serviceData?.image_url}
                 />
                 <Box padding={2}>
                   <Typography variant="body">

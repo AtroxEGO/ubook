@@ -1,21 +1,26 @@
 import { Box, Container, CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useGetAllFavoritesMutation } from "../services/api/apiSlice";
 import ServiceCard from "../components/ServiceCard";
 import { Navbar } from "../components/Navbar";
+import { useDispatch, useSelector } from "react-redux";
+import { setFavorites } from "../services/store/features/favoritesSlice";
 const FavoritePage = () => {
-  const [favoriteServices, setFavoriteServices] = useState();
+  const favorites = useSelector((state) => state.favoriteReducer.favorites);
+  const dispatch = useDispatch();
   const [getFavorites, { isLoading }] = useGetAllFavoritesMutation();
 
   useEffect(() => {
     getFavorites()
       .unwrap()
       .then((data) => {
-        setFavoriteServices(data.favorites);
+        console.log(data);
+        dispatch(setFavorites(data.favorites));
       })
       .catch((error) => {
         console.log(error);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -33,8 +38,8 @@ const FavoritePage = () => {
             <CircularProgress />
           ) : (
             <>
-              {favoriteServices && favoriteServices.length > 0 ? (
-                favoriteServices.map((favorite) => {
+              {favorites && favorites.length > 0 ? (
+                favorites.map((favorite) => {
                   return (
                     <ServiceCard
                       key={favorite.serviceID}

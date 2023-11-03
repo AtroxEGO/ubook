@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { setFavorites } from "./favoritesSlice";
+import { closeWebSocketConnection, connectWebSocket } from "../../WebSocket";
 
 const initialState = {
   loggedIn: false,
@@ -23,11 +23,13 @@ export const accountSlice = createSlice({
       state.loggedIn = true;
       state.token = action.payload.token;
       state.accountData = action.payload.accountData;
+      connectWebSocket(action.payload.token);
     },
     logout: (state) => {
       state.loggedIn = false;
       state.token = null;
       state.accountData = null;
+      closeWebSocketConnection();
     },
   },
 });

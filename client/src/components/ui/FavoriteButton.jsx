@@ -17,11 +17,11 @@ export const FavoriteButton = ({ serviceID }) => {
   const favorites = useSelector((state) => state.favoriteReducer.favorites);
 
   const handleFavoriteClick = (serviceID) => {
-    if (favorites.includes(serviceID)) {
+    if (favorites.find((favorite) => favorite.serviceID === serviceID)) {
       removeFavorite({ serviceID: serviceID })
         .unwrap()
         .then((data) => {
-          dispatch(setFavorites(data.favorites.map((item) => item.serviceID)));
+          dispatch(setFavorites(data.favorites));
           dispatch(setSnack(data));
         })
         .catch((error) => {
@@ -32,7 +32,7 @@ export const FavoriteButton = ({ serviceID }) => {
         .unwrap()
         .then((data) => {
           dispatch(setSnack(data));
-          dispatch(setFavorites(data.favorites.map((item) => item.serviceID)));
+          dispatch(setFavorites(data.favorites));
         })
         .catch((error) => {
           console.log(error);
@@ -49,7 +49,7 @@ export const FavoriteButton = ({ serviceID }) => {
           handleFavoriteClick(serviceID);
         }}
         name="favoriteButton">
-        {favorites.includes(serviceID) ? (
+        {favorites.find((favorite) => favorite.serviceID === serviceID) ? (
           <FavoriteIcon color="primary" />
         ) : (
           <FavoriteBorderRoundedIcon color="primary" />

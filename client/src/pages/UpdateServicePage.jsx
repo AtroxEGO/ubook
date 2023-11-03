@@ -19,7 +19,7 @@ const UpdateServicePage = () => {
     navigate("/");
   }
 
-  const [getService, { isLoading }] = useGetServiceByIDMutation();
+  const [getService] = useGetServiceByIDMutation();
 
   useEffect(() => {
     if (!serviceID) return;
@@ -33,6 +33,7 @@ const UpdateServicePage = () => {
         console.log(error);
         dispatch(setSnack(error));
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [serviceID]);
 
   return (

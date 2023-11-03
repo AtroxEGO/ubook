@@ -13,7 +13,7 @@ import HourglassTopIcon from "@mui/icons-material/HourglassTop";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { TimePicker } from "@mui/x-date-pickers";
 import { MuiFileInput } from "mui-file-input";
-import moment, { relativeTimeRounding } from "moment";
+import moment from "moment";
 import { serviceCreationSchema } from "../utils/validationSchemas";
 import { useDispatch } from "react-redux";
 import { setSnack } from "../services/store/features/snackSlice";

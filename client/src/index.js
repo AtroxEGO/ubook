@@ -9,7 +9,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 // #TODO:
-// - Optimize landing page search bar
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

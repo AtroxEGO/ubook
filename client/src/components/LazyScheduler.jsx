@@ -11,20 +11,26 @@ const LazyScheduler = () => {
   const [tableHours, setTableHours] = useState({ min: 6, max: 20 });
 
   useEffect(() => {
-    if (events.length === 0) return;
+    if (events.length === 0) {
+      setTableHours({ min: 8, max: 16 });
+      return;
+    }
     // Find the earliest and latest start times in the events array
     const earliestStart = events.reduce(
-      (min, event) => (event.start < min ? event.start : min),
-      events[0].start
+      (min, event) =>
+        event.start.getHours() < min ? event.end.getHours() : min,
+      events[0].start.getHours()
     );
+
     const latestEnd = events.reduce(
-      (max, event) => (event.end > max ? event.end : max),
-      events[0].end
+      (max, event) => (event.end.getHours() > max ? event.end.getHours() : max),
+      events[0].end.getHours()
     );
+
     // Update the tableHours state with the new values
     setTableHours({
-      min: earliestStart.getHours() < 8 ? earliestStart.getHours() : 8,
-      max: latestEnd.getHours() > 16 ? latestEnd.getHours() : 16,
+      min: earliestStart <= 6 ? earliestStart - 1 : 6,
+      max: latestEnd >= 16 ? latestEnd + 1 : 15,
     });
   }, [events]);
 
