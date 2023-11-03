@@ -37,6 +37,7 @@ router.use("/reviews", [TokenVerifier], ReviewsRouter);
 
 // Requests regarding bookings
 const { BookingsRouter } = require("./routes/Bookings");
+const WebSocketServer = require("./helpers/WebSocketServer");
 router.use("/bookings", [TokenVerifier], BookingsRouter);
 
 module.exports = { VersionRouter: router };

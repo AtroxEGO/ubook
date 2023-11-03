@@ -19,9 +19,12 @@ const QueryAllBookingsByServiceID = async (serviceID) => {
 };
 
 const QueryBookingByID = async (bookingID) => {
-  const [res] = await pool.execute(`SELECT * FROM bookings WHERE id = ?;`, [
-    bookingID,
-  ]);
+  const [[res]] = await pool.execute(
+    `SELECT bookings.id, user_id, service_id, timestamp, accepted, name as service_name FROM bookings
+    LEFT JOIN services on services.id = bookings.service_id
+    WHERE bookings.id=?;`,
+    [bookingID]
+  );
   return res;
 };
 
@@ -86,7 +89,7 @@ const QueryArchiveBookingsByOwnerID = async (userID) => {
 const QueryUpcomingBookingsByOwnerID = async (userID) => {
   const [res] = await pool.execute(
     // `SELECT * FROM bookings WHERE (SELECT services.created_by FROM services WHERE services.id = service_id) = ? AND DATE_ADD(timestamp, INTERVAL (SELECT duration FROM services WHERE services.id = bookings.service_id) MINUTE) > NOW();`,
-    `SELECT bookings.id as event_id, CONCAT(users.first_name," ",users.last_name) as booker_full_name, TIMESTAMP(timestamp) as start, TIMESTAMP(DATE_ADD(timestamp, INTERVAL duration MINUTE)) as end, accepted, services.name as name, subcategory_name
+    `SELECT bookings.id as event_id, CONCAT(users.first_name," ",users.last_name) as booker_full_name, TIMESTAMP(timestamp) as start, TIMESTAMP(DATE_ADD(timestamp, INTERVAL duration MINUTE)) as end, accepted, services.name as name, services.image_url, subcategory_name
     FROM bookings
     LEFT JOIN services ON bookings.service_id = services.id
     LEFT JOIN subcategories ON services.subcategory = subcategories.id

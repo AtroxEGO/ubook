@@ -1,4 +1,4 @@
-const errorMessages = require("../helpers/ErrorMessages");
+const errorMessages = require("./ErrorMessages");
 
 // class ServerError extends Error {
 //   constructor(message, path = "general") {
@@ -14,7 +14,7 @@ const Error = (code, path = "general") => {
   return {
     message,
     path,
-    type, // TODO: Check if this is needed
+    type,
   };
 };
 

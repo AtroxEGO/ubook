@@ -15,9 +15,11 @@ const {
   QueryArchiveBookingsByOwnerID,
   QueryBookingsForGivenTimeFrameByCreatorID,
   UpdateBookingAccepted,
+  QueryBookingByID,
 } = require("../services/BookingTable");
 const { QueryServiceById } = require("../services/ServicesTable");
 const { getAvaiableHoursAsTimestamps } = require("../helpers/Booking");
+const WebSocketServer = require("../helpers/WebSocketServer");
 
 // Get all bookings for user/business
 const GetAllBookings = async (req, res) => {
@@ -61,6 +63,8 @@ const RemoveBookingByID = async (req, res) => {
   const accountType = req.userData.account;
   const bookingID = req.body.bookingID;
 
+  if (!bookingID) return res.status(400).json(Error(errorMessages.missingData));
+
   const result =
     accountType === "user"
       ? await DeleteBookingByUserAndBookingID(userID, bookingID)
@@ -86,6 +90,16 @@ const AcceptBookingByID = async (req, res) => {
       .status(400)
       .json(Error(errorMessages.notAuthorizedOrDoesntExits));
 
+  const booking = await QueryBookingByID(bookingID);
+
+  WebSocketServer.sendNotification("user", booking.user_id, {
+    title: "Your Booking Was Accepted!",
+    body: `Your booking for ${
+      booking.service_name
+    } was accepted just now! See you ${moment(booking.timestamp).fromNow()}!`,
+    type: "bookingAccepted",
+  });
+
   res.json(Notification("Booking was accepted!"));
 };
 
@@ -110,11 +124,22 @@ const CreateNewBooking = async (req, res) => {
   if (!includesTargetStartTime)
     return res.status(400).json(Error(errorMessages.invalidData));
   try {
-    await InsertBookingForDay(req.userData.id, serviceID, timestamp.format());
-    res.json(Notification("Successfully booked the service"));
+    const result = await InsertBookingForDay(
+      req.userData.id,
+      serviceID,
+      timestamp.format()
+    );
+    WebSocketServer.sendNotification("business", service.created_by, {
+      title: "New Booking!",
+      body: "You have a new booking for: " + service.name,
+      bookingID: result.insertId,
+      type: "newBooking",
+    });
   } catch (error) {
     res.status(400).json(error);
   }
+
+  res.json(Notification("Successfully booked the service"));
 };
 
 const GetBookingsForTimeframeByCreatorID = async (req, res) => {
