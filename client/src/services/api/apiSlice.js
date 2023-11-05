@@ -8,12 +8,13 @@ export const getTokenFromLocalStorage = () => {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3002/v1/",
+    baseUrl: "https://ubook.polakiewicz.com:3002/",
     prepareHeaders: async (headers, query) => {
       headers.set("Authorization", "Bearer " + getTokenFromLocalStorage());
       return headers;
     },
   }),
+
   transformErrorResponse: (response, meta, arg) => {
     return { ...response.data, type: "error" };
   },
