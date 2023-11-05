@@ -1,12 +1,7 @@
 const yup = require("yup");
 const moment = require("moment");
-const {
-  patternTwoDigisAfterComma,
-  isValidFileType,
-} = require("../helpers/Validation");
+const { patternTwoDigisAfterComma } = require("../helpers/Validation");
 
-const nameEmpty = "Please enter service name!";
-const descEmpty = "Please enter service description!";
 const wrongNameLength =
   "Service name musts be between 10 and 100 characters long!";
 const wrongDescLength =

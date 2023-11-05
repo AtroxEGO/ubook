@@ -3,8 +3,10 @@ const Error = require("../helpers/Error");
 const errorMessages = require("../helpers/ErrorMessages");
 require("dotenv").config();
 
+// Check if the token is valid and if the user is verified
 module.exports = (socket, next) => {
   const token = socket.handshake.auth.token;
+
   if (!token) return next(Error(errorMessages.notAuthorized));
 
   try {

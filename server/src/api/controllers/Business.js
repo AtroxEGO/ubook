@@ -4,13 +4,12 @@ const errorMessages = require("../helpers/ErrorMessages");
 const moment = require("moment");
 const bcrypt = require("bcrypt");
 const { CheckIfRecordExists } = require("../services/UserTable");
-const config = require("../../../config/config");
+const config = require("../../config/config");
 const { CreateToken } = require("../helpers/Token");
 const { SendVerificationCode } = require("../helpers/VerifyAccountEmail");
 const {
   InsertBusiness,
   QueryBusinessDataFromEmail,
-  UpdateVerified,
   UpdateBusinessVerified,
   QueryBusinessDataFromID,
 } = require("../services/BusinessTable");

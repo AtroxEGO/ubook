@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { QueryUserTokenData } = require("../services/UserTable");
 const { QueryBusinessTokenData } = require("../services/BusinessTable");
-const config = require("../../../config/config");
+const config = require("../../config/config");
 
 const CreateToken = async (userID, account) => {
   const tokenData =

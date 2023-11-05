@@ -1,17 +1,12 @@
-const WebSocket = require("./api/v1/helpers/WebSocketServer");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const config = require("./config/config");
-const { VersionRouter } = require("./api/v1/versionRouter");
+const config = require("./src/config/config");
+const { Router } = require("./src/api/Router");
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
-const WebSocketServer = require("./api/v1/helpers/WebSocketServer");
-
-// # TODO
-// - Learn how to write documentation (/)
-// - Use sockets to show when someone tries to book your service (?)
+const WebSocketServer = require("./src/api/helpers/WebSocketServer");
 
 // Setup WebSocket Server
 WebSocketServer.initialize(server);
@@ -22,13 +17,8 @@ app.use(bodyParser.json({ limit: "500kb" }));
 app.use(cors());
 app.set("view engine", "pug");
 
-// Router For Version: 1.0
-app.use("/v1", VersionRouter);
-
-// Check servers health
-app.get("/", (req, res) => {
-  res.send("Ok");
-});
+// Main Router
+app.use("/", Router);
 
 // Start App
 server.listen(config.port, () => {

@@ -14,7 +14,6 @@ const BusinessOwnsService = () => async (req, res, next) => {
   if (!service) return res.status(400).json(Error(errorMessages.doesntExist));
 
   if (service.created_by != accountID) {
-    console.log(service);
     return res.status(401).json(Error(errorMessages.notAuthorized));
   }
   next();

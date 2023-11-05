@@ -2,21 +2,29 @@ const express = require("express");
 const router = express.Router();
 const TokenVerifier = require("./middlewares/TokenVerifier");
 const CorrectAccountTypeMiddleware = require("./middlewares/CorrectAccountTypeMiddleware");
+const { UserRouter } = require("./routes/User");
+const { BusinessRouter } = require("./routes/Business");
+const { ServicesRouter } = require("./routes/Services");
+const { ManageRouter } = require("./routes/Manage");
+const { FavoritesRouter } = require("./routes/Favorites");
+const { ReviewsRouter } = require("./routes/Reviews");
+const { BookingsRouter } = require("./routes/Bookings");
+
+// Check servers health
+router.get("/", (_, res) => {
+  res.send("Ok");
+});
 
 // Requests regarding user account
-const { UserRouter } = require("./routes/User");
 router.use("/user", UserRouter);
 
 // Requests regarding business account
-const { BusinessRouter } = require("./routes/Business");
 router.use("/business", BusinessRouter);
 
 // Requests regarding service browsing
-const { ServicesRouter } = require("./routes/Services");
 router.use("/services", [TokenVerifier], ServicesRouter);
 
 // Requests regarding managing services by business
-const { ManageRouter } = require("./routes/Manage");
 router.use(
   "/manage",
   [TokenVerifier, CorrectAccountTypeMiddleware("business")],
@@ -24,7 +32,6 @@ router.use(
 );
 
 // Requests regarding favorite services
-const { FavoritesRouter } = require("./routes/Favorites");
 router.use(
   "/favorites",
   [TokenVerifier, CorrectAccountTypeMiddleware("user")],
@@ -32,12 +39,9 @@ router.use(
 );
 
 // Requests regarding reviews
-const { ReviewsRouter } = require("./routes/Reviews");
 router.use("/reviews", [TokenVerifier], ReviewsRouter);
 
 // Requests regarding bookings
-const { BookingsRouter } = require("./routes/Bookings");
-const WebSocketServer = require("./helpers/WebSocketServer");
 router.use("/bookings", [TokenVerifier], BookingsRouter);
 
-module.exports = { VersionRouter: router };
+module.exports = { Router: router };

@@ -27,4 +27,23 @@ const isBase64Image = (base64String) => {
   return false;
 };
 
-module.exports = { patternTwoDigisAfterComma, isValidFileType, isBase64Image };
+// Strips body from data that is not in a schema
+const stripBody = async (schema, body) => {
+  const schemaKeys = Object.keys(schema.describe().fields);
+  const strippedBody = {};
+
+  for (const key in body) {
+    if (schemaKeys.includes(key)) {
+      strippedBody[key] = body[key];
+    }
+  }
+
+  return strippedBody;
+};
+
+module.exports = {
+  patternTwoDigisAfterComma,
+  stripBody,
+  isValidFileType,
+  isBase64Image,
+};

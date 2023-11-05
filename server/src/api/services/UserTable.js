@@ -11,8 +11,9 @@ const CheckIfRecordExists = async (table, param, value) => {
 };
 
 const InsertUser = async (userData) => {
+  console.log(userData);
   const [res] = await pool.execute(
-    "INSERT INTO users VALUES (null,?,?,?,?,?,?,false)",
+    "INSERT INTO users VALUES (null,?,?,?,?,'',?,false)",
     Object.values(userData)
   );
   if (res.insertId) {

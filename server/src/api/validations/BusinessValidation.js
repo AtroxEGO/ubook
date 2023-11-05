@@ -2,7 +2,6 @@ const yup = require("yup");
 
 const emailNotLongEnough = "email must be at least 3 characters";
 const nameNotLongEnough = "name must be at least 3 characters";
-const passwordNotLongEnough = "password must be at least 8 characters";
 const invalidEmail = "email must be a valid email";
 
 const businessCreateSchema = yup.object().shape({
@@ -34,8 +33,6 @@ const businessCreateSchema = yup.object().shape({
     .required("Please specify if u allow marketing!"),
   address: yup.string().required("Please specify your Address"),
 });
-
-// ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!>.,[\]%*?&])[A-Za-z\d@$!>.,[\]%*?&]{8,16}$
 
 const businessLoginSchema = yup.object().shape({
   email: yup

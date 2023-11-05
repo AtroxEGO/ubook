@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const Error = require("../helpers/Error");
 require("dotenv").config();
 
+// Check if the token is valid
 module.exports = (request, response, next) => {
   const token = request.header("Authorization")?.replace("Bearer ", "");
   if (!token)
@@ -29,7 +30,6 @@ module.exports = (request, response, next) => {
       .status(401)
       .json(Error("Token invalid or expired", "general"));
   }
-  // setTimeout(() => {
+
   next();
-  // }, 2000);
 };

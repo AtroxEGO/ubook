@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const accountKey = require("../../../config/firebaseAdminKey.json");
+const accountKey = require("../../config/firebaseAdminKey.json");
 const { getDownloadURL } = require("firebase-admin/storage");
 const crypto = require("crypto");
 const Error = require("./Error");

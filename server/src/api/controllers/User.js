@@ -9,7 +9,7 @@ const {
   QueryUserDataFromID,
   UpdateUserVerified,
 } = require("../services/UserTable");
-const config = require("../../../config/config");
+const config = require("../../config/config");
 const { CreateToken } = require("../helpers/Token");
 const { SendVerificationCode } = require("../helpers/VerifyAccountEmail");
 const {
