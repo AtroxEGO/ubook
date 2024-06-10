@@ -95,7 +95,7 @@ const LoginForm = () => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Loginnnn
+          Loginnnnn
         </Typography>
         <Box
           component="form"
