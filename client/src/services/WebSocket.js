@@ -10,4 +10,5 @@ export const closeWebSocketConnection = () => {
 export const connectWebSocket = (token) => {
   socket.auth = { token: token };
   socket.connect();
+  socket.io.emit("connection");
 };

@@ -53,7 +53,7 @@ export const BusinessRegisterFormInputs = ({ businessFormik }) => {
         }
       />
       <AddressAutocomplete
-        apiKey={process.env.REACT_APP_PLACES_API_KEY}
+        apiKey={""}
         label="Address"
         name="address"
         id="address"

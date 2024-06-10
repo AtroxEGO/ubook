@@ -35,10 +35,10 @@ const RegisterForm = () => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const userFormik = useFormik({
     initialValues: {
-      firstName: "Pawel",
-      lastName: "Polakiewicz",
-      email: "pawel.polakiewicz1@gmail.com",
-      password: "Test123@",
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
       allowsMarketing: false,
       accountType: useLocation().state?.accountType || "user",
     },
@@ -66,11 +66,11 @@ const RegisterForm = () => {
 
   const businessFormik = useFormik({
     initialValues: {
-      businessName: "Very Good Business",
-      email: "pawel.polakiewicz1@gmail.com",
-      password: "Test123@",
+      businessName: "",
+      email: "",
+      password: "",
       allowsMarketing: false,
-      address: "Krakow, Poland",
+      address: "",
       accountType: useLocation().state?.accountType || "user",
     },
     validationSchema: businessCreateSchema,
@@ -107,17 +107,17 @@ const RegisterForm = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-        }}>
+        }}
+      >
         <Avatar
           sx={{
             m: 1,
             bgcolor: "primary.main",
-          }}>
+          }}
+        >
           <LockOutlinedIcon />
         </Avatar>
-        <Typography
-          component="h1"
-          variant="h5">
+        <Typography component="h1" variant="h5">
           Register
         </Typography>
         <Box
@@ -134,7 +134,8 @@ const RegisterForm = () => {
             accountType === "user"
               ? userFormik.handleSubmit
               : businessFormik.handleSubmit
-          }>
+          }
+        >
           {accountType === "user" ? (
             <UserFormInputs userFormik={userFormik} />
           ) : (
