@@ -9,7 +9,6 @@ const { QueryUserVerificationEmailData } = require("../services/UserTable");
 const {
   QueryBusinessVerificationEmailData,
 } = require("../services/BusinessTable");
-const { readFile } = require("fs");
 
 const SendVerificationCode = async (userID, accountType) => {
   const code = GenerateCode();
@@ -45,7 +44,6 @@ const SendVerificationEmail = (emailData, code, accountType) => {
   const emailOptions = {
     to: emailData.email, // Recipient's email address
     subject: "Email Verification | UBook", // Email subject
-    html: html,
     html: pug.renderFile("src/api/views/verificationCode.pug", {
       firstName: emailData.first_name,
       list: codeArray,
