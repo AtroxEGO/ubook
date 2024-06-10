@@ -13,8 +13,8 @@ const mysql2 = require("mysql2/promise");
 
 // New Version Of MySQL
 const pool = mysql2.createPool({
-  host: "localhost",
-  database: "ubook2",
+  host: "ubook-database-1",
+  database: "ubook",
   user: "root",
   password: process.env.DB_PASSWORD,
   waitForConnections: true,

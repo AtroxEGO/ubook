@@ -35,7 +35,7 @@ const LoginForm = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "pawel.polakiewicz1@gmail.com",
+      email: "user@example.com",
       password: "Test123@",
       accountType: useLocation().state?.accountType || "user",
     },

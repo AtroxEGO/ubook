@@ -17,7 +17,7 @@ const InsertBusiness = async (businessData) => {
 const QueryBusinessDataFromID = async (userID) => {
   const [[res]] = await pool.execute(
     `SELECT *
-     FROM BUSINESSES WHERE id = ?;
+     FROM businesses WHERE id = ?;
     `,
     [userID]
   );
@@ -27,7 +27,7 @@ const QueryBusinessDataFromID = async (userID) => {
 const QueryBusinessDataFromEmail = async (businessEmail) => {
   const [[res]] = await pool.execute(
     `SELECT *
-     FROM BUSINESSES WHERE email = ?;
+     FROM businesses WHERE email = ?;
     `,
     [businessEmail]
   );

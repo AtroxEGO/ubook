@@ -26,7 +26,7 @@ const InsertUser = async (userData) => {
 const QueryUserDataFromID = async (userID) => {
   const [[res]] = await pool.execute(
     `SELECT *
-     FROM USERS WHERE id = ?;
+     FROM users WHERE id = ?;
     `,
     [userID]
   );
@@ -36,7 +36,7 @@ const QueryUserDataFromID = async (userID) => {
 const QueryUserDataFromEmail = async (userEmail) => {
   const [[res]] = await pool.execute(
     `SELECT *
-     FROM USERS WHERE email = ?;
+     FROM users WHERE email = ?;
     `,
     [userEmail]
   );
@@ -46,7 +46,7 @@ const QueryUserDataFromEmail = async (userEmail) => {
 const QueryUserTokenData = async (userID) => {
   const [[res]] = await pool.execute(
     `SELECT id, email, first_name, last_name, avatar_url, allows_marketing, verified 
-     FROM USERS WHERE id = ?;
+     FROM users WHERE id = ?;
     `,
     [userID]
   );
@@ -56,7 +56,7 @@ const QueryUserTokenData = async (userID) => {
 const QueryUserVerificationEmailData = async (userID) => {
   const [[res]] = await pool.execute(
     `SELECT email, first_name
-     FROM USERS WHERE id = ?;
+     FROM users WHERE id = ?;
     `,
     [userID]
   );

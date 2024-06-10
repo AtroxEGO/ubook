@@ -26,7 +26,7 @@ const LandingPage = () => {
       getAllFavorites()
         .unwrap()
         .then((data) => {
-          dispatch(setFavorites(data.favorites.map((item) => item.serviceID)));
+          dispatch(setFavorites(data.favorites));
         })
         .catch((error) => {
           dispatch(setSnack(error));
@@ -51,10 +51,7 @@ const LandingPage = () => {
         />
 
         {accountData.account === "user" ? (
-          <ServiceList
-            allServices={allServices}
-            searchTerm={searchTerm}
-          />
+          <ServiceList allServices={allServices} searchTerm={searchTerm} />
         ) : (
           <div>
             <Suspense fallback={<div>Loading</div>}>
@@ -65,7 +62,8 @@ const LandingPage = () => {
       </Box>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}>
+        open={isLoading}
+      >
         <CircularProgress color="inherit" />
       </Backdrop>
     </Container>

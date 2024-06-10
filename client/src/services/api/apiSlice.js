@@ -5,10 +5,12 @@ export const getTokenFromLocalStorage = () => {
   return accountReducer.token;
 };
 
+const baseUrl = "https://ubook.polakiewicz.com/api";
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://ubook.polakiewicz.com:3002/",
+    baseUrl: baseUrl,
     prepareHeaders: async (headers, query) => {
       headers.set("Authorization", "Bearer " + getTokenFromLocalStorage());
       return headers;

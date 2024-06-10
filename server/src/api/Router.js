@@ -12,7 +12,7 @@ const { BookingsRouter } = require("./routes/Bookings");
 
 // Check servers health
 router.get("/", (_, res) => {
-  res.send("Ok");
+  res.json({status: "ok"});
 });
 
 // Requests regarding user account

@@ -9,6 +9,7 @@ export const favoritesSlice = createSlice({
   initialState,
   reducers: {
     setFavorites: (state, action) => {
+      console.log(action.payload);
       state.favorites = action.payload;
     },
   },

@@ -18,7 +18,7 @@ app.use(cors());
 app.set("view engine", "pug");
 
 // Main Router
-app.use("/", Router);
+app.use("/api", Router);
 
 // Start App
 server.listen(config.port, () => {
