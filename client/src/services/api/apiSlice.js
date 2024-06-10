@@ -5,7 +5,7 @@ export const getTokenFromLocalStorage = () => {
   return accountReducer.token;
 };
 
-const baseUrl = `${process.env.API_HOST}/api`;
+const baseUrl = `https://ubook.polakiewicz.online/api`;
 
 export const api = createApi({
   reducerPath: "api",
