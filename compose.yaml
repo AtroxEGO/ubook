@@ -1,0 +1,31 @@
+services:
+  frontend:
+    build: ./client
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      NODE_ENV: production
+
+  backend:
+    build: ./server
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - database
+
+  database:
+    image: mysql:latest
+    restart: unless-stopped
+    volumes:
+      - ./DatabaseStructAndData.sql:/docker-entrypoint-initdb.d/DatabaseStructAndData.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: Datab123!Password
+      MYSQL_DATABASE: ubook
+networks:
+  default:
+    external: true
+    name: proxy-network
