@@ -84,18 +84,18 @@ const LoginForm = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-        }}>
+        }}
+      >
         <Avatar
           sx={{
             m: 1,
             bgcolor: "primary.main",
-          }}>
+          }}
+        >
           <LockOutlinedIcon />
         </Avatar>
-        <Typography
-          component="h1"
-          variant="h5">
-          Login
+        <Typography component="h1" variant="h5">
+          Loginn
         </Typography>
         <Box
           component="form"
@@ -107,7 +107,8 @@ const LoginForm = () => {
             width: "100%",
           }}
           noValidate
-          onSubmit={formik.handleSubmit}>
+          onSubmit={formik.handleSubmit}
+        >
           <TextField
             fullWidth
             id="email"
@@ -141,15 +142,12 @@ const LoginForm = () => {
               formik.handleChange(e);
               setAccountType(e.target.value);
             }}
-            aria-label="Account Type">
-            <ToggleButton
-              name="accountType"
-              value="user">
+            aria-label="Account Type"
+          >
+            <ToggleButton name="accountType" value="user">
               User
             </ToggleButton>
-            <ToggleButton
-              name="accountType"
-              value="business">
+            <ToggleButton name="accountType" value="business">
               Business
             </ToggleButton>
           </ToggleButtonGroup>
@@ -157,7 +155,8 @@ const LoginForm = () => {
             variant="contained"
             fullWidth
             loading={isLoading}
-            type="submit">
+            type="submit"
+          >
             Submit
           </LoadingButton>
           <Typography ml="auto">
@@ -167,7 +166,8 @@ const LoginForm = () => {
                 navigate("/register", {
                   state: { accountType: formik.values.accountType },
                 });
-              }}>
+              }}
+            >
               Register
             </Button>
           </Typography>
