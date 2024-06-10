@@ -1,4 +1,4 @@
 #!/bin/bash
-git pull origin main
+git pull origin master
 docker compose down
 docker compose up -d --build
