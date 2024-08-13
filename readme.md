@@ -80,13 +80,19 @@ Before you begin, ensure you have the following installed:
 
 1. **Set up environment variables:**
 
-   Create a `.env` file in the `backend` directory and configure the necessary environment variables:
+   Create a `.env` file in the `server` directory and configure the necessary environment variables:
 
    ```plaintext
    DB_PASSWORD=your_db_password
    MAIL_USER=email@example.com
    MAIL_PASSWORD=your_email_password
    JWT_PRIVATE_KEY=your_jwt_private_key
+   ```
+
+   Create a `.env` file in the `client` directory and configure the necessary environment variables:
+
+   ```plaintext
+   REACT_APP_API_HOST = "http://localhost:3002/api"
    ```
 
 2. **Start the MySQL database:**
