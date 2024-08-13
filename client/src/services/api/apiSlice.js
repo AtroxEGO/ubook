@@ -5,7 +5,7 @@ export const getTokenFromLocalStorage = () => {
   return accountReducer.token;
 };
 
-const baseUrl = `https://ubook.polakiewicz.online/api`;
+const baseUrl = process.env.REACT_APP_API_HOST;
 
 export const api = createApi({
   reducerPath: "api",
@@ -23,7 +23,7 @@ export const api = createApi({
   keepUnusedDataFor: 30,
   endpoints: (builder) => ({
     getAllServices: builder.query({
-      query: () => "services/getAll",
+      query: () => "/services/getAll",
       transformErrorResponse: (response, meta, arg) => {
         return { ...response.data, type: "error" };
       },

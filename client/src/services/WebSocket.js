@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-export const socket = io(`https://ubook.polakiewicz.online/api`);
+export const socket = io(process.env.REACT_APP_API_HOST);
 
 export const closeWebSocketConnection = () => {
   socket.disconnect();

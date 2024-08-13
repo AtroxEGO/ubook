@@ -41,6 +41,7 @@ const LoginForm = () => {
     },
     validationSchema: loginFormSchema,
     onSubmit: (values) => {
+      console.log(process.env);
       if (accountType === "user") {
         loginUser({
           email: values.email,
